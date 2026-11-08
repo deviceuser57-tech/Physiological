@@ -54,6 +54,7 @@ const INITIAL_DEMOGRAPHICS: DemographicContext = {
   useGad7: true,
   useIsi: true,
   usePss10: true,
+  useHybridScale: true,
 };
 
 export default function App() {
@@ -81,6 +82,22 @@ export default function App() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [clinicalStaff, setClinicalStaff] = useState<ClinicalStaffUser | null>(() => clinicalAuthService.getCurrentStaff());
   const [isStaffModalOpen, setIsStaffModalOpen] = useState(false);
+  const [latestHybridScale, setLatestHybridScale] = useState<any>(null);
+
+  // Fetch Clinic Settings (Hybrid Scale)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settings = await clinicalDatabase.getClinicSettings();
+        if (settings?.latestHybridScale) {
+          setLatestHybridScale(settings.latestHybridScale);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch hybrid scale from cloud', err);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleLogin = async () => {
     setIsLoggingIn(true);
@@ -131,6 +148,16 @@ export default function App() {
       setUser(currentUser);
     });
     return () => unsubscribe();
+  }, []);
+
+  // Migration for new scale
+  useEffect(() => {
+    setDemographics(prev => {
+      if (prev.useHybridScale === undefined) {
+        return { ...prev, useHybridScale: true };
+      }
+      return prev;
+    });
   }, []);
 
   // Construct dynamic scale sequences
@@ -223,6 +250,17 @@ export default function App() {
       });
     }
 
+    if (demographics.useHybridScale && latestHybridScale) {
+      list.push({
+        type: 'hybrid',
+        title: latestHybridScale.title || 'المقياس الهجين المعتمد',
+        shortCode: latestHybridScale.shortCode || 'HYBRID',
+        description: latestHybridScale.description || 'مقياس مخصص يتم جلبه من مستودع الـ AI والدرايف السريري',
+        maxScore: latestHybridScale.questions.length * 3, // Assuming 0-3 scale
+        questions: latestHybridScale.questions,
+      });
+    }
+
     list.push({
       type: 'dashboard',
       title: 'تقرير التشخيص الموزون',
@@ -241,13 +279,15 @@ export default function App() {
     demographics.useGad7,
     demographics.useIsi,
     demographics.usePss10,
+    demographics.useHybridScale,
+    latestHybridScale,
   ]);
 
   const currentScale = scaleSequences[activeScaleIndex] || scaleSequences[0];
 
   // Calculated Assessment Result
   const currentAssessmentResult = useMemo(() => {
-    const raw = calculateAssessment(demographics, responses);
+    const raw = calculateAssessment(demographics, responses, latestHybridScale);
     if (doctorFinalizedResult) {
       return {
         ...raw,
@@ -283,7 +323,8 @@ export default function App() {
       demographics.useGds ||
       demographics.useGad7 ||
       demographics.useIsi ||
-      demographics.usePss10;
+      demographics.usePss10 ||
+      demographics.useHybridScale;
 
     if (!hasAnyScale) {
       setDemographicsError('يرجى تحديد مقياس واحد على الأقل من بطارية الاختبارات للبدء.');
@@ -414,7 +455,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#050811] text-slate-100' : 'bg-slate-50 text-slate-900'} flex flex-col selection:bg-purple-600 selection:text-white relative transition-colors duration-300`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'deep-gradient-bg text-slate-100' : 'bg-slate-50 text-slate-900'} flex flex-col selection:bg-purple-600 selection:text-white relative transition-colors duration-300`}>
       {/* Background Ambient Glow */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden no-print">
         <div className={`absolute w-[600px] h-[600px] ${theme === 'dark' ? 'bg-indigo-600/5' : 'bg-indigo-600/10'} rounded-full blur-[140px] -top-40 -right-40`} />
@@ -482,7 +523,7 @@ export default function App() {
 
       {/* Main Content Container */}
       <main className="relative z-10 flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className={`w-full rounded-3xl ${theme === 'dark' ? 'bg-[#090d20]/80' : 'bg-white shadow-xl'} backdrop-blur-xl border ${theme === 'dark' ? 'border-white/10' : 'border-slate-200'} shadow-2xl p-6 sm:p-10 transition-colors duration-300`}>
+        <div className={`w-full rounded-3xl ${theme === 'dark' ? 'glass-card border-white/10' : 'bg-white border-slate-200 shadow-xl'} shadow-2xl p-6 sm:p-10 transition-colors duration-300`}>
           {/* Active View 1: Cognitive Behavioral Therapy (CBT) Module */}
           {activeView === 'cbt' && <CbtModule theme={theme} />}
 
@@ -561,13 +602,14 @@ export default function App() {
               {/* Dynamic Step View Content */}
               <div id="step-content-area">
                 {currentScale.type === 'demographics' && (
-                  <DemographicsStep
-                    data={demographics}
-                    onChange={setDemographics}
-                    onSubmit={handleDemographicsSubmit}
-                    errorMessage={demographicsError}
-                    theme={theme}
-                  />
+                    <DemographicsStep
+                      data={demographics}
+                      onChange={setDemographics}
+                      onSubmit={handleDemographicsSubmit}
+                      errorMessage={demographicsError}
+                      theme={theme}
+                      latestHybridScale={latestHybridScale}
+                    />
                 )}
 
                 {currentScale.type !== 'demographics' && currentScale.type !== 'dashboard' && (
@@ -625,7 +667,14 @@ export default function App() {
       <StaffLoginModal
         isOpen={isStaffModalOpen}
         onClose={() => setIsStaffModalOpen(false)}
-        onStaffChange={(staff) => setClinicalStaff(staff)}
+        onStaffChange={(staff) => {
+          setClinicalStaff(staff);
+          if (staff?.role === 'doctor') {
+            setActiveView('workspace');
+          } else if (staff?.role === 'clinic_manager') {
+            setActiveView('patients');
+          }
+        }}
         theme={theme}
       />
 
@@ -634,14 +683,18 @@ export default function App() {
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
           <div>PsychoContext · منصة المعايرة السريرية والموازنة البيئية للمقاييس النفسية</div>
           <div className="flex items-center gap-4 text-[11px]">
-            <span>7 مقاييس معتمدة أكاديمياً</span>
+            <span className="text-indigo-400 font-bold">النظام التصميمي المتطور (Deep Clinical UI)</span>
             <span>·</span>
-            <span>وحدة CBT وإعادة الهيكلة</span>
+            <span>8 مقاييس سحابية وهجينة</span>
             <span>·</span>
-            <span>السيادة السريرية الكاملة للطبيب</span>
+            <span>وحدة CBT والذكاء الاصطناعي</span>
+            <span>·</span>
+            <span>السيادة السريرية المعتمدة</span>
           </div>
         </div>
       </footer>
+
+
     </div>
   );
 }

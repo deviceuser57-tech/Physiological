@@ -96,7 +96,7 @@ export const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
       />
 
       {/* Top Scale Status Bar */}
-      <div className={`p-4 rounded-2xl ${theme === 'dark' ? 'bg-indigo-950/30 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100 shadow-sm'} border flex flex-wrap justify-between items-center gap-3 transition-colors duration-300`}>
+      <div className={`p-4 rounded-2xl ${theme === 'dark' ? 'glass-card border-white/5' : 'bg-indigo-50 border-indigo-100 shadow-sm'} border flex flex-wrap justify-between items-center gap-3 transition-colors duration-300`}>
         <div className="flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
           <span className={`text-xs ${theme === 'dark' ? 'text-indigo-300' : 'text-indigo-600'}`}>المقياس النشط:</span>
@@ -175,7 +175,7 @@ export const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
       </div>
 
       {/* Main Question Card */}
-      <div className={`p-6 sm:p-8 rounded-2xl ${theme === 'dark' ? 'bg-white/5 border-white/10 shadow-lg' : 'bg-white border-slate-200 shadow-md'} border space-y-6 transition-all duration-300`}>
+      <div className={`p-6 sm:p-8 rounded-3xl ${theme === 'dark' ? 'glass-card border-white/5 shadow-2xl' : 'bg-white border-slate-200 shadow-md'} border space-y-6 transition-all duration-300`}>
         <div className="flex justify-between items-start gap-4">
           <div className="space-y-1">
             <span className={`text-[11px] ${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-600'} font-semibold tracking-wider block uppercase`}>

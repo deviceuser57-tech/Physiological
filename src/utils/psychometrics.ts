@@ -12,7 +12,8 @@ import {
 
 export function calculateAssessment(
   demographics: DemographicContext,
-  responses: Record<string, number>
+  responses: Record<string, number>,
+  hybridScale?: any
 ): AssessmentResult {
   // 1. Calculate PHQ-9 (Patient Health Questionnaire - 9)
   let phqRaw = 0;
@@ -156,6 +157,27 @@ export function calculateAssessment(
     pssSeverity = 'إدراك منخفض للضغوط / قدرة تكيف عالية (0-13)';
     if (pssRaw >= 27) pssSeverity = 'إدراك حاد ومرتفع للضغوط النفسية (27-40)';
     else if (pssRaw >= 14) pssSeverity = 'إدراك معتدل للضغوط الحياتية (14-26)';
+  }
+
+  // 8. HYBRID (Dynamic from Cloud/AI)
+  let hybridRaw = 0;
+  let hybridMax = 0;
+  let hybridPercentage = 0;
+  let hybridSeverity = 'غير مفعل';
+
+  if (demographics.useHybridScale && hybridScale) {
+    hybridMax = hybridScale.questions.length * 3;
+    hybridScale.questions.forEach((q: any) => {
+      hybridRaw += responses[q.id] ?? 0;
+    });
+    hybridPercentage = Math.round((hybridRaw / Math.max(1, hybridMax)) * 100);
+
+    // Generic severity based on percentage
+    if (hybridPercentage >= 80) hybridSeverity = 'مستوى مرتفع جداً / يتطلب تدخلاً فورياً';
+    else if (hybridPercentage >= 60) hybridSeverity = 'مستوى مرتفع / دلالة سريرية واضحة';
+    else if (hybridPercentage >= 40) hybridSeverity = 'مستوى متوسط / أعراض معتدلة';
+    else if (hybridPercentage >= 20) hybridSeverity = 'مستوى خفيف / بداية ظهور أعراض';
+    else hybridSeverity = 'مستوى سوي / غياب الأعراض';
   }
 
   // 5. Environmental Factors & Modifiers Evaluation
@@ -329,6 +351,10 @@ export function calculateAssessment(
   if (demographics.usePss10) {
     activeScaleCount++;
     combinedSum += pssPercentage;
+  }
+  if (demographics.useHybridScale && hybridScale) {
+    activeScaleCount++;
+    combinedSum += hybridPercentage;
   }
 
   const rawCombinedScore = activeScaleCount > 0 ? Math.round(combinedSum / activeScaleCount) : 0;
@@ -587,6 +613,16 @@ ${domainCommentary}
               max: pssMax,
               percentage: pssPercentage,
               severity: pssSeverity,
+            },
+          }
+        : {}),
+      ...(demographics.useHybridScale && hybridScale
+        ? {
+            hybrid: {
+              raw: hybridRaw,
+              max: hybridMax,
+              percentage: hybridPercentage,
+              severity: hybridSeverity,
             },
           }
         : {}),

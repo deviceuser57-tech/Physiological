@@ -9,6 +9,7 @@ interface DemographicsStepProps {
   onSubmit: () => void;
   errorMessage?: string;
   theme?: 'dark' | 'light';
+  latestHybridScale?: any;
 }
 
 export const DemographicsStep: React.FC<DemographicsStepProps> = ({
@@ -17,6 +18,7 @@ export const DemographicsStep: React.FC<DemographicsStepProps> = ({
   onSubmit,
   errorMessage,
   theme = 'dark',
+  latestHybridScale,
 }) => {
   const updateField = <K extends keyof DemographicContext>(key: K, value: DemographicContext[K]) => {
     onChange({ ...data, [key]: value });
@@ -95,7 +97,8 @@ export const DemographicsStep: React.FC<DemographicsStepProps> = ({
     data.useGds ||
     data.useGad7 ||
     data.useIsi ||
-    data.usePss10;
+    data.usePss10 ||
+    data.useHybridScale;
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -386,6 +389,44 @@ export const DemographicsStep: React.FC<DemographicsStepProps> = ({
                   <Sparkles className="w-3 h-3 text-amber-400" />
                   <span>مقترح من الذكاء الاصطناعي بناءً على الشكوى الصوتية</span>
                 </div>
+              )}
+            </div>
+          </label>
+
+          {/* Hybrid Scale Card (Dynamic from Cloud) */}
+          <label
+            className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none sm:col-span-2 ${
+              data.useHybridScale
+                ? 'border-indigo-500 bg-indigo-600/15 shadow-sm'
+                : theme === 'dark'
+                ? 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10 hover:border-white/20'
+                : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50 shadow-sm'
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={data.useHybridScale ?? false}
+              onChange={(e) => updateField('useHybridScale', e.target.checked)}
+              className="w-4 h-4 mt-1 accent-indigo-500 rounded cursor-pointer"
+            />
+            <div className="space-y-1 flex-1">
+              <div className="flex justify-between items-center">
+                <span className={`font-bold text-sm ${theme === 'dark' || data.useHybridScale ? 'text-white' : 'text-slate-900'}`}>
+                  {latestHybridScale ? `⭐ ${latestHybridScale.title}` : '⭐ المقياس الهجين المعتمد (من مستودع الـ AI)'}
+                </span>
+                <span className={`text-[10px] font-mono ${theme === 'dark' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-indigo-50 text-indigo-700'} px-2 py-0.5 rounded`}>
+                  {latestHybridScale ? `${latestHybridScale.questions.length} أسئلة` : 'سحابي'}
+                </span>
+              </div>
+              <p className={`text-xs ${theme === 'dark' || data.useHybridScale ? 'text-slate-300' : 'text-slate-600'} leading-relaxed`}>
+                {latestHybridScale 
+                  ? latestHybridScale.description 
+                  : 'مقياس مخصص يتم جلبه وتحديثه ديناميكياً من مستودع الدرايف السريري (يشمل التأهيل العسكري والمسارات المستحدثة).'}
+              </p>
+              {!latestHybridScale && data.useHybridScale && (
+                <p className="text-[10px] text-amber-400 animate-pulse">
+                  جاري جلب بيانات المقياس من السحابة...
+                </p>
               )}
             </div>
           </label>

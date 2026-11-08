@@ -139,6 +139,7 @@ export interface DemographicContext {
   useGad7: boolean;
   useIsi: boolean;
   usePss10: boolean;
+  useHybridScale?: boolean;
   voiceComplaint?: string;
   voiceTone?: string;
   speechRate?: string;
@@ -161,7 +162,7 @@ export interface Question {
 }
 
 export interface ScaleDefinition {
-  type: 'demographics' | 'phq9' | 'bdi2' | 'dass21' | 'gds15' | 'gad7' | 'isi' | 'pss10' | 'dashboard' | 'cbt' | 'memory';
+  type: 'demographics' | 'phq9' | 'bdi2' | 'dass21' | 'gds15' | 'gad7' | 'isi' | 'pss10' | 'hybrid' | 'dashboard' | 'cbt' | 'memory';
   title: string;
   shortCode: string;
   description: string;
@@ -190,6 +191,7 @@ export interface AssessmentResult {
     gad7?: { raw: number; max: number; percentage: number; severity: string };
     isi?: { raw: number; max: number; percentage: number; severity: string };
     pss10?: { raw: number; max: number; percentage: number; severity: string };
+    hybrid?: { raw: number; max: number; percentage: number; severity: string };
   };
   environmentalModifier: number;
   environmentalFactors: { label: string; impact: number; reason: string }[];

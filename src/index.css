@@ -11,6 +11,47 @@
   }
 }
 
+/* Elite Clinical Design System & Deep Gradients */
+.deep-gradient-bg {
+  background: radial-gradient(circle at 50% -20%, #2e2a7a 0%, #090d20 60%, #020617 100%) !important;
+  background-attachment: fixed !important;
+}
+
+.glass-card {
+  background: rgba(13, 18, 41, 0.88) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6) !important;
+}
+
+.light-theme .glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+}
+
+.floating-nav {
+  position: sticky;
+  top: 1rem;
+  z-index: 50;
+  margin: 0.75rem auto;
+  max-width: 82rem;
+  border-radius: 1.5rem;
+  background: rgba(7, 11, 25, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+  transition: all 0.3s ease;
+}
+
+.light-theme .floating-nav {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 7px;
@@ -20,11 +61,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.25);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.5);
 }
 
 .light-theme ::-webkit-scrollbar-track {
@@ -36,11 +77,11 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fadeIn {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Print styling for professional psychiatric clinical dossier PDF export */
@@ -111,4 +152,3 @@
     page-break-inside: avoid;
   }
 }
-

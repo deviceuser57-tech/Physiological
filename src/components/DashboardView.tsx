@@ -1027,6 +1027,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             { key: 'gad7', label: 'GAD-7 القلق العام', color: 'text-blue-500', max: 21, desc: 'معيار القلق المزمن وصعوبة التحكم' },
             { key: 'isi', label: 'ISI مؤشر الأرق', color: 'text-cyan-500', max: 28, desc: 'معيار الأرق السريري والأداء النهاري' },
             { key: 'pss10', label: 'PSS-10 إدراك الضغوط', color: 'text-rose-500', max: 40, desc: 'مقياس إدراك عدم السيطرة والعبء' },
+            { key: 'military', label: 'التأهيل العسكري MIL-PREP', color: 'text-amber-500', max: 30, desc: 'جاهزية الثبات والقرار والصلابة' },
           ].map((s) => {
             const score = (result.scores as any)[s.key];
             if (!score) return null;
