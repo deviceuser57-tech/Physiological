@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Global Helpers ---
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(data) { return isSignedIn() && data.ownerId == request.auth.uid; }
+    function isEmailVerified() { return request.auth.token.email_verified == true; }
+
+    // --- Entity Validations ---
+    function isValidPatient(data) {
+      return data.keys().hasAll(['name', 'age', 'ownerId', 'createdAt', 'updatedAt']) &&
+             data.keys().hasOnly(['id', 'name', 'age', 'gender', 'city', 'district', 'social', 'job', 'economy', 'health', 'createdAt', 'updatedAt', 'ownerId']) &&
+             data.name is string && data.name.size() <= 200 &&
+             data.age is number && data.age >= 0 && data.age <= 120 &&
+             data.ownerId == request.auth.uid &&
+             data.createdAt == request.time &&
+             data.updatedAt == request.time;
+    }
+
+    function isValidVisit(data) {
+      return data.keys().hasAll(['patientId', 'timestamp', 'ownerId']) &&
+             data.keys().hasOnly(['id', 'patientId', 'timestamp', 'caseTitle', 'voiceTone', 'speechRate', 'voiceComplaint', 'summary', 'assessmentData', 'doctorNotes', 'treatmentPlan', 'ownerId']) &&
+             data.patientId is string && data.patientId.size() <= 128 &&
+             data.ownerId == request.auth.uid &&
+             data.timestamp == request.time &&
+             exists(/databases/$(database)/documents/patients/$(data.patientId)) &&
+             get(/databases/$(database)/documents/patients/$(data.patientId)).data.ownerId == request.auth.uid;
+    }
+
+    // --- Collection Matches ---
+    match /patients/{patientId} {
+      allow get: if isOwner(existing());
+      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if isSignedIn() && isEmailVerified() && isValidId(patientId) && isValidPatient(incoming());
+      allow update: if isSignedIn() && isEmailVerified() && isOwner(existing()) && isValidPatient(incoming()) &&
+                      incoming().ownerId == existing().ownerId &&
+                      incoming().createdAt == existing().createdAt &&
+                      incoming().updatedAt == request.time;
+      allow delete: if isOwner(existing());
+    }
+
+    match /visits/{visitId} {
+      allow get: if isOwner(existing());
+      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if isSignedIn() && isEmailVerified() && isValidId(visitId) && isValidVisit(incoming());
+      allow update: if isSignedIn() && isEmailVerified() && isOwner(existing()) && isValidVisit(incoming()) &&
+                      incoming().ownerId == existing().ownerId &&
+                      incoming().patientId == existing().patientId &&
+                      incoming().timestamp == existing().timestamp;
+      allow delete: if isOwner(existing());
+    }
+  }
+}

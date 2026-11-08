@@ -1,0 +1,10 @@
+{
+  "name": "PsychoContext",
+  "description": "منصة نفسية سريرية متقدمة للمعايرة البيئية والديموغرافية للمقاييس المعتمدة عالمياً (PHQ-9, BDI-II, DASS-21, GDS-15) مع وحدة متكاملة للعلاج السلوكي المعرفي.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

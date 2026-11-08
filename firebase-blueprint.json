@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "Patient": {
+      "title": "بيانات المريض",
+      "description": "الملف الشخصي والبيانات الديموغرافية الأساسية للمريض.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID الفريد للمريض" },
+        "name": { "type": "string", "description": "اسم المريض أو الرمز المستعار" },
+        "age": { "type": "number", "description": "عمر المريض" },
+        "gender": { "type": "string", "enum": ["male", "female", "unspecified"] },
+        "city": { "type": "string" },
+        "district": { "type": "string" },
+        "social": { "type": "string" },
+        "job": { "type": "string" },
+        "economy": { "type": "string" },
+        "health": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "ownerId": { "type": "string", "description": "UID الطبيب المعالج" }
+      },
+      "required": ["name", "age", "ownerId"]
+    },
+    "Visit": {
+      "title": "زيارة سريرية",
+      "description": "سجل لزيارة مريض تشمل النتائج السريرية والملخص.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patientId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "caseTitle": { "type": "string", "description": "عنوان الحالة المستخلص" },
+        "voiceComplaint": { "type": "string" },
+        "summary": { "type": "string", "description": "ملخص الزيارة والنتائج" },
+        "assessmentData": { "type": "object", "description": "البيانات الكاملة للتقييم والمقاييس" },
+        "doctorNotes": { "type": "string" },
+        "treatmentPlan": { "type": "object" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["patientId", "timestamp", "ownerId"]
+    }
+  },
+  "firestore": {
+    "/patients/{patientId}": {
+      "schema": "Patient",
+      "description": "مجموعة المرضى المسجلين لدى الأطباء."
+    },
+    "/visits/{visitId}": {
+      "schema": "Visit",
+      "description": "سجلات الزيارات السريرية المستقلة."
+    }
+  }
+}
