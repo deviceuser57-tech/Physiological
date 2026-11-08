@@ -219,10 +219,13 @@ export const clinicalDatabase = {
     try {
       const docRef = doc(db, 'clinic_settings', 'main');
       const docSnap = await getDoc(docRef);
-      return docSnap.exists() ? docSnap.data() : null;
+      if (docSnap.exists()) {
+        return docSnap.data();
+      }
+      return { latestHybridScale: DEFAULT_HYBRID_SCALE };
     } catch (e) {
-      console.error('Error fetching settings', e);
-      return null;
+      console.warn('Firestore offline or unreachable, using local fallback settings.', e);
+      return { latestHybridScale: DEFAULT_HYBRID_SCALE };
     }
   },
 
@@ -234,5 +237,45 @@ export const clinicalDatabase = {
       throw e;
     }
   }
+};
+
+const DEFAULT_HYBRID_SCALE = {
+  id: "mil_prep_v1",
+  title: "التأهيل النفسي للكليات العسكرية",
+  shortCode: "MIL-PREP",
+  description: "تقييم الثبات الانفعالي، اتخاذ القرار تحت الضغط، والصلابة النفسية للطلبة المتقدمين",
+  questions: [
+    {
+      id: "mil_1",
+      text: "إلى أي مدى تتمتع بالقدرة على اتخاذ قرار حاسم وصحيح تحت ضغط الوقت المفاجئ؟",
+      inherentWeight: 10,
+      contextualImportance: 10,
+      finalUnifiedWeight: 20,
+      reference: "قاعدة المعرفة الافتراضية - التأهيل العسكري",
+      isDuplicate: false,
+      options: ["بدرجة منخفضة", "بدرجة متوسطة", "بدرجة عالية وثابتة"]
+    },
+    {
+      id: "mil_2",
+      text: "كيف تتعامل مع المواقف الاستفزازية أو الضغوط النفسية الشديدة أثناء الاختبارات؟",
+      inherentWeight: 9,
+      contextualImportance: 9,
+      finalUnifiedWeight: 18,
+      reference: "قاعدة المعرفة الافتراضية - التأهيل العسكري",
+      isDuplicate: false,
+      options: ["أفقد السيطرة أحياناً", "أحافظ على هدوئي وضبط انفعالاتي", "أبدي ثباتاً انفعالياً عالياً"]
+    },
+    {
+      id: "mil_3",
+      text: "هل تدرك طبيعة الحياة العسكرية القائمة على الانضباط الصارم والعمل الجماعي؟",
+      inherentWeight: 10,
+      contextualImportance: 9,
+      finalUnifiedWeight: 19,
+      reference: "قاعدة المعرفة الافتراضية - التأهيل العسكري",
+      isDuplicate: false,
+      options: ["لدي تردد", "أفهمها ومستعد للتكيف", "متحمس بالكامل ولدي صلابة عالية"]
+    }
+  ],
+  branch: "military_rehab"
 };
 
