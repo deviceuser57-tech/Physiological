@@ -24,12 +24,12 @@ export const StaffLoginModal: React.FC<StaffLoginModalProps> = ({
 
   const currentStaff = clinicalAuthService.getCurrentStaff();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
-    const res = clinicalAuthService.loginStaff(username, pin);
+    const res = await clinicalAuthService.loginStaff(username, pin);
     if (res.success && res.user) {
       setSuccess(`تم تسجيل الدخول بنجاح بصلاحية: ${res.user.role === 'doctor' ? 'طبيب معالج' : 'مدير العيادة'}`);
       onStaffChange(res.user);

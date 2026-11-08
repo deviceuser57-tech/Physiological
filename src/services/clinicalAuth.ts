@@ -1,3 +1,6 @@
+import { doc, getDoc, updateDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
 export type ClinicalRole = 'doctor' | 'clinic_manager';
 
 export interface ClinicalStaffUser {
@@ -7,6 +10,7 @@ export interface ClinicalStaffUser {
   role: ClinicalRole;
   title: string;
   licenseNumber?: string;
+  email?: string;
 }
 
 // Built-in verified staff credentials for the clinic
@@ -44,8 +48,7 @@ export const clinicalAuthService = {
     } catch (e) {
       console.warn('Failed to load clinical auth from storage', e);
     }
-    // Default to doctor if not set so user is not blocked initially, but respects role selection
-    return PRESET_STAFF_ACCOUNTS[0];
+    return null;
   },
 
   setCurrentStaff(user: ClinicalStaffUser | null) {
@@ -57,7 +60,39 @@ export const clinicalAuthService = {
     }
   },
 
-  loginStaff(usernameOrId: string, pinOrPass: string): { success: boolean; user?: ClinicalStaffUser; error?: string } {
+  async fetchUserRole(uid: string): Promise<ClinicalRole | null> {
+    try {
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data().role as ClinicalRole;
+      }
+    } catch (e) {
+      console.error('Error fetching role', e);
+    }
+    return null;
+  },
+
+  async getAllStaff(): Promise<ClinicalStaffUser[]> {
+    try {
+      const snapshot = await getDocs(collection(db, 'users'));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ClinicalStaffUser));
+    } catch (e) {
+      console.error('Error fetching all staff', e);
+      return [];
+    }
+  },
+
+  async updateUserRole(uid: string, role: ClinicalRole) {
+    try {
+      await updateDoc(doc(db, 'users', uid), { role });
+    } catch (e) {
+      console.error('Error updating role', e);
+      throw e;
+    }
+  },
+
+  async loginStaff(usernameOrId: string, pinOrPass: string): Promise<{ success: boolean; user?: ClinicalStaffUser; error?: string }> {
     const cleanUser = usernameOrId.trim().toLowerCase();
     const cleanPin = pinOrPass.trim();
 
@@ -69,8 +104,11 @@ export const clinicalAuthService = {
 
     if (account) {
       const { pin, ...user } = account;
+      // Sync/Init in Firestore
+      await setDoc(doc(db, 'users', user.id), user, { merge: true });
+      
       this.setCurrentStaff(user);
-      // If logging in as doctor, automatically grant memory bank access
+      
       if (user.role === 'doctor') {
         localStorage.setItem(STORAGE_KEY_MEMORY_UNLOCKED, 'true');
       } else {
@@ -79,36 +117,9 @@ export const clinicalAuthService = {
       return { success: true, user };
     }
 
-    // Flexible fallback: if username contains 'doc' or 'طبيب', allow as doctor
-    if (cleanUser.includes('doc') || cleanUser.includes('طبيب')) {
-      const doctorUser: ClinicalStaffUser = {
-        id: `staff_${Date.now()}`,
-        username: cleanUser,
-        displayName: 'طبيب معالج (دخول مخصص)',
-        role: 'doctor',
-        title: 'طبيب نفسي سريري معتمد',
-      };
-      this.setCurrentStaff(doctorUser);
-      localStorage.setItem(STORAGE_KEY_MEMORY_UNLOCKED, 'true');
-      return { success: true, user: doctorUser };
-    }
-
-    if (cleanUser.includes('man') || cleanUser.includes('مدير')) {
-      const mgrUser: ClinicalStaffUser = {
-        id: `staff_${Date.now()}`,
-        username: cleanUser,
-        displayName: 'مدير العيادة (دخول مخصص)',
-        role: 'clinic_manager',
-        title: 'مدير العيادة والمنسق الإداري',
-      };
-      this.setCurrentStaff(mgrUser);
-      localStorage.removeItem(STORAGE_KEY_MEMORY_UNLOCKED);
-      return { success: true, user: mgrUser };
-    }
-
     return {
       success: false,
-      error: 'بيانات الدخول غير صحيحة. يرجى استخدام اسم المعرف وكلمة المرور/الرمز (مثال: doctor / 123456 أو manager / 123456)',
+      error: 'بيانات الدخول غير صحيحة.',
     };
   },
 
@@ -133,3 +144,4 @@ export const clinicalAuthService = {
     localStorage.removeItem(STORAGE_KEY_MEMORY_UNLOCKED);
   },
 };
+

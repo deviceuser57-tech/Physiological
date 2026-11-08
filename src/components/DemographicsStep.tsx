@@ -1,6 +1,6 @@
 import React from 'react';
 import { DemographicContext, AiScaleRecommendation } from '../types/clinical';
-import { Sliders, Compass, AlertCircle, CheckCircle2, Sparkles, ShieldCheck, Volume2, Timer } from 'lucide-react';
+import { Sliders, Compass, AlertCircle, Sparkles, ShieldCheck, Volume2, Timer } from 'lucide-react';
 import { VoiceComplaintIntake } from './VoiceComplaintIntake';
 
 interface DemographicsStepProps {
@@ -480,7 +480,6 @@ export const DemographicsStep: React.FC<DemographicsStepProps> = ({
             placeholder="مثال: إمبابة، شبرا، المعادي، التجمع، حي شعبي مكتظ، أو ضاحية هادئة"
             className={getFieldClass('district', `w-full ${theme === 'dark' ? 'bg-white/5 border-white/10 text-white placeholder-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'} border rounded-xl px-4 py-2.5 focus:outline-none focus:border-purple-500 text-sm transition-colors`)}
           />
-          {/* Quick tags */}
           <div className="flex flex-wrap gap-1.5 mt-2">
             {commonDistricts.map((d) => (
               <button
@@ -665,4 +664,3 @@ export const DemographicsStep: React.FC<DemographicsStepProps> = ({
     </div>
   );
 };
-

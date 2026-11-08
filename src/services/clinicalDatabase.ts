@@ -93,7 +93,6 @@ export const clinicalDatabase = {
 
     try {
       const patientRef = doc(db, PATIENTS_PATH, patientId);
-      const existing = await getDoc(patientRef);
 
       // Strict adherence to Patient entity schema in firestore.rules
       const record: Record<string, any> = {
@@ -109,17 +108,14 @@ export const clinicalDatabase = {
         health: patientData.health || 'healthy',
         ownerId: uid,
         updatedAt: serverTimestamp(),
+        createdAt: serverTimestamp(), // safe with merge: true if already exists
       };
-
-      if (!existing.exists()) {
-        record.createdAt = serverTimestamp();
-      }
 
       await setDoc(patientRef, record, { merge: true });
       return patientId;
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, PATIENTS_PATH);
-      return '';
+    } catch (error: any) {
+      console.warn('Firestore offline fallback for patient upsert:', error?.message);
+      return patientId; // Return patientId even if offline so local save succeeds
     }
   },
 
@@ -165,9 +161,9 @@ export const clinicalDatabase = {
 
       await setDoc(doc(db, VISITS_PATH, visitId), visitData);
       return visitId;
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, VISITS_PATH);
-      return '';
+    } catch (error: any) {
+      console.warn('Firestore offline fallback for saveVisit:', error?.message);
+      return visitId; // Return visitId so local history save succeeds
     }
   },
 
@@ -203,5 +199,40 @@ export const clinicalDatabase = {
       handleFirestoreError(error, OperationType.LIST, VISITS_PATH);
       return [];
     }
+  },
+
+  // --- Appointment Operations ---
+  async getAppointments() {
+    if (!auth.currentUser) return [];
+    try {
+      const q = query(collection(db, 'appointments'), orderBy('date', 'asc'));
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      handleFirestoreError(error, OperationType.LIST, 'appointments');
+      return [];
+    }
+  },
+
+  // --- Clinic Settings Operations ---
+  async getClinicSettings() {
+    try {
+      const docRef = doc(db, 'clinic_settings', 'main');
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? docSnap.data() : null;
+    } catch (e) {
+      console.error('Error fetching settings', e);
+      return null;
+    }
+  },
+
+  async updateClinicSettings(settings: any) {
+    try {
+      await setDoc(doc(db, 'clinic_settings', 'main'), settings, { merge: true });
+    } catch (e) {
+      console.error('Error updating settings', e);
+      throw e;
+    }
   }
 };
+

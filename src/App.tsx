@@ -25,7 +25,12 @@ import { OverallScaleProgressBar } from './components/OverallScaleProgressBar';
 import { CbtModule } from './components/CbtModule';
 import { ClinicalMemoryBankView } from './components/ClinicalMemoryBankView';
 import { ClinicalCloudDatabaseView } from './components/ClinicalCloudDatabaseView';
+import { LandingPage } from './components/LandingPage';
+import { SettingsView } from './components/SettingsView';
+import { PatientsView, AppointmentsView } from './components/ManagementViews';
+import { ClinicalWorkspaceView } from './components/ClinicalWorkspaceView';
 import { StaffLoginModal } from './components/StaffLoginModal';
+import { ManagePermissionsView } from './components/ManagePermissionsView';
 import { clinicalAuthService, ClinicalStaffUser } from './services/clinicalAuth';
 import { ShieldAlert, X } from 'lucide-react';
 
@@ -70,7 +75,7 @@ export default function App() {
   const [activeModal, setActiveModal] = useState<'calibration' | 'scales' | 'guidelines' | 'history' | null>(null);
   const [demographicsError, setDemographicsError] = useState('');
   const [user, setUser] = useState<User | null>(null);
-  const [activeView, setActiveView] = useState<'assessment' | 'cbt' | 'memory' | 'database'>('assessment');
+  const [activeView, setActiveView] = useState<'assessment' | 'cbt' | 'memory' | 'database' | 'permissions' | 'settings' | 'patients' | 'appointments' | 'workspace'>('assessment');
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -426,6 +431,11 @@ export default function App() {
         onGoToCbt={() => setActiveView('cbt')}
         onGoToMemory={() => setActiveView('memory')}
         onGoToDatabase={() => setActiveView('database')}
+        onGoToPermissions={() => setActiveView('permissions')}
+        onGoToSettings={() => setActiveView('settings')}
+        onGoToPatients={() => setActiveView('patients')}
+        onGoToAppointments={() => setActiveView('appointments')}
+        onGoToWorkspace={() => setActiveView('workspace')}
         activeView={activeView}
         historyCount={savedAssessments.length}
         theme={theme}
@@ -489,11 +499,29 @@ export default function App() {
             />
           )}
 
+          {/* Active View 5: Permission Manager (Doctor Only) */}
+          {activeView === 'permissions' && (
+            <ManagePermissionsView theme={theme} />
+          )}
+
+          {/* Active View 6: Settings (Manager Only) */}
+          {activeView === 'settings' && <SettingsView theme={theme} />}
+
+          {/* Active View 7: Patients (Manager/Doctor) */}
+          {activeView === 'patients' && <PatientsView theme={theme} />}
+
+          {/* Active View 8: Appointments (Manager/Doctor) */}
+          {activeView === 'appointments' && <AppointmentsView theme={theme} />}
+
+          {/* Active View 9: Consultant & Architect Workspace (Doctor Only) */}
+          {activeView === 'workspace' && <ClinicalWorkspaceView theme={theme} />}
+
           {/* Active View 4: Clinical Assessment & Sovereign Diagnostic Report */}
           {activeView === 'assessment' && (
             <>
               {/* Step Navigation Tabs Strip */}
               <div className={`flex items-center justify-between border-b ${theme === 'dark' ? 'border-white/10' : 'border-slate-200'} pb-5 mb-8 overflow-x-auto gap-3 no-print custom-scrollbar`}>
+
                 {scaleSequences.map((sec, idx) => {
                   const isActive = idx === activeScaleIndex;
                   const isPassed = idx < activeScaleIndex;

@@ -38,6 +38,18 @@
         "ownerId": { "type": "string" }
       },
       "required": ["patientId", "timestamp", "ownerId"]
+    },
+    "User": {
+      "title": "مستخدم النظام",
+      "description": "معلومات المستخدم وصلاحيات الوصول.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["doctor", "clinic_manager"] },
+        "displayName": { "type": "string" }
+      },
+      "required": ["uid", "role"]
     }
   },
   "firestore": {
@@ -48,6 +60,11 @@
     "/visits/{visitId}": {
       "schema": "Visit",
       "description": "سجلات الزيارات السريرية المستقلة."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "ملفات تعريف المستخدمين وصلاحياتهم."
     }
   }
 }
+

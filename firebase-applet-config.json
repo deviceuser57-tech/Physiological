@@ -1,12 +1,11 @@
 {
-  "projectId": "nifty-composite-sxq1s",
-  "appId": "1:147122946644:web:9103b16d2f85d0a70a63c1",
-  "apiKey": "AIzaSyAsg7dFV2QK3W1rN2JpD2YfacXzB8KKZls",
-  "authDomain": "nifty-composite-sxq1s.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-psychocontext-499ec8c5-c011-45e9-bea0-e0981530cd1d",
-  "storageBucket": "nifty-composite-sxq1s.firebasestorage.app",
-  "messagingSenderId": "147122946644",
+  "projectId": "gen-lang-client-0851566146",
+  "appId": "1:597559957771:web:6e7031e8ea100afa19ea0e",
+  "apiKey": "AIzaSyCSboMNtmTad3oMPS9_oZuAwjJ5nBlLv4E",
+  "authDomain": "gen-lang-client-0851566146.firebaseapp.com",
+  "storageBucket": "gen-lang-client-0851566146.firebasestorage.app",
+  "messagingSenderId": "597559957771",
   "measurementId": "",
-  "oAuthClientId": "147122946644-3bn3g7ihg665041ver4g29j66l1kpsnc.apps.googleusercontent.com",
+  "oAuthClientId": "597559957771-tuek7il7qvui3iso0hri695ts80s8sfs.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }

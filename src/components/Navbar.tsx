@@ -14,6 +14,8 @@ import {
   Stethoscope,
   Building2,
   KeyRound,
+  ShieldCheck,
+  Cpu,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -23,7 +25,12 @@ interface NavbarProps {
   onGoToCbt: () => void;
   onGoToMemory: () => void;
   onGoToDatabase: () => void;
-  activeView: 'assessment' | 'cbt' | 'memory' | 'database';
+  onGoToPermissions: () => void;
+  onGoToSettings: () => void;
+  onGoToPatients: () => void;
+  onGoToAppointments: () => void;
+  onGoToWorkspace: () => void;
+  activeView: 'assessment' | 'cbt' | 'memory' | 'database' | 'permissions' | 'settings' | 'patients' | 'appointments' | 'workspace';
   historyCount: number;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
@@ -42,6 +49,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onGoToCbt,
   onGoToMemory,
   onGoToDatabase,
+  onGoToPermissions,
+  onGoToSettings,
+  onGoToPatients,
+  onGoToAppointments,
+  onGoToWorkspace,
   activeView,
   historyCount,
   theme,
@@ -107,6 +119,39 @@ export const Navbar: React.FC<NavbarProps> = ({
               <LayoutList className="w-3.5 h-3.5" />
               <span>السجلات السحابية</span>
             </button>
+          )}
+
+          {clinicalStaff?.role === 'doctor' && (
+            <>
+              <button
+                onClick={onGoToPermissions}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                  activeView === 'permissions'
+                    ? 'bg-rose-600/25 border border-rose-500/40 text-rose-600 font-bold'
+                    : `hover:bg-black/5`
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>الصلاحيات</span>
+              </button>
+              <button
+                onClick={onGoToWorkspace}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                  activeView === 'workspace'
+                    ? 'bg-purple-600/25 border border-purple-500/40 text-purple-400 font-bold'
+                    : `hover:bg-black/5`
+                }`}
+              >
+                <Cpu className="w-3.5 h-3.5" />
+                <span>مستودع الدرايف والـ AI</span>
+              </button>
+            </>
+          )}
+
+          <button onClick={onGoToPatients} className={`px-3 py-1.5 rounded-xl transition-all ${activeView === 'patients' ? 'bg-indigo-600/20 text-indigo-500 font-bold' : ''}`}>المرضى</button>
+          <button onClick={onGoToAppointments} className={`px-3 py-1.5 rounded-xl transition-all ${activeView === 'appointments' ? 'bg-indigo-600/20 text-indigo-500 font-bold' : ''}`}>المواعيد</button>
+          {clinicalStaff?.role === 'clinic_manager' && (
+            <button onClick={onGoToSettings} className={`px-3 py-1.5 rounded-xl transition-all ${activeView === 'settings' ? 'bg-indigo-600/20 text-indigo-500 font-bold' : ''}`}>الإعدادات</button>
           )}
 
           <button
