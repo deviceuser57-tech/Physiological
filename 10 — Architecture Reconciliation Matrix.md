@@ -1,0 +1,40 @@
+# PsychoContext V8 — Architecture Reconciliation Matrix
+
+**Version:** 2.0-proposed | **Status:** Integrated reconciliation; owner decisions 1–8 are approved per supplied prompt; other resolutions remain proposed/open
+
+| ID | Original positions and sources | Conflict/gap | Reconciled position | Decision status | Target docs / owner | Priority, dependencies and acceptance |
+|---|---|---|---|---|---|---|
+| RC-01 | Historical environmental score calibration in Nov 6 action history vs owner requirement preserve valid measurement | Context subtraction may invalidate score | Context informs formulation only; raw scores unchanged absent specific validated method | OWNER REQUIREMENT; resolution policy | 01,02,07,12 / psychometric lead | P0; test context invariance |
+| RC-02 | Full platform vision vs earlier assistant recommendation for narrow MVP | Narrow scope could appear to remove domains | Retain all domains; four maturity levels govern capability depth, not importance | OWNER APPROVED Decision 7 | 01,05,15 / owner | P0; every domain mapped to maturity level |
+| RC-03 | Earlier provisional CBDNA as emerging concept vs owner says independent core engine | “Research-only” wording could demote its architectural role | CBDNA is an independent core engine in architecture; individual models/features mature through gates; not clinical authority | OWNER APPROVED Decision 1 | 01,08,16 / owner + scientific lead | P1 core / L4 for research models; provenance and boundary tests |
+| RC-04 | Exclusive hierarchy vs cross-domain links | Single branch loses interconnection | Multi-axial many-to-many taxonomy; links do not imply equivalence/score combination | OWNER APPROVED Decision 2 | 02,07 / knowledge owner | P1; schema/link semantics tests |
+| RC-05 | Patient cases as learning memory vs no automatic generalization | Privacy and validity conflict | Patient memory generates candidates through specialist/method/ethics/de-ID pipeline only | OWNER APPROVED Decision 3 | 08,09,14,16 / research governance | P0 research; block auto-update tests |
+| RC-06 | “Self-learning” AI vs human evidence authority | Model output may be mistaken for approved knowledge | Hybrid AI-assisted discovery; specialists review; approval/versioned release required | OWNER APPROVED Decision 4 | 09,11,17 / governance board | P1; audit every update and test single-case block |
+| RC-07 | AI recommendation vs clinician final authority | Risk of automation bias/override | Clinician authoritative throughout; enforce in role, API, data, UI, orchestration, audit and tests | OWNER APPROVED Decision 5 | 01,03,11 / clinical governance | P0; negative authorization/E2E tests |
+| RC-08 | Undefined “RAG 5” vs new clarification | Possible false claim it is a formal standard | Working name Advanced Adaptive RAG; evaluate methods selectively; never claim official version | OWNER APPROVED Decision 6 | 02,03,17 / AI/knowledge owner | P1 design; benchmark and provenance criteria |
+| RC-09 | Historical MIL-PREP/generic civilian readiness/defense preparation language vs clarified applicant service | Prior interpretation changed actual offering | Free Military Applicant Psychological Readiness Program for Egyptian applicants; specific developmental/wellbeing goals and non-official boundaries | OWNER APPROVED Decision 8 | 01,13,15 / owner + service lead | P1 specification; acceptance checks language, free status, boundaries |
+| RC-10 | Service may be confused with physical military preparation, rehabilitation or official admissions | High-stakes/official-affiliation risk | Explicit exclusions; no prediction/guarantee/deception coaching or official equivalence | OWNER APPROVED Decision 8 | 11,13,14 / legal + clinical | P0 safeguards; content review and no forbidden outcomes |
+| RC-11 | Islamic psychology as assessment perspective vs future Fitrah | Could conflate domain and model | Keep one perspective where evidence/rights exist; Fitrah is separate future research | Prior owner requirement retained | 01,02,08 / owner + scholars/researchers | P2; separate construct/approval gate |
+| RC-12 | Seven scales claimed validated vs absent proof/rights in prior audit | Bibliographic citations treated as validation/license | Instrument-by-instrument status; no activation without evidence and permissions | OWNER REQUIREMENT + PSL | 02,12 / psychometric + legal | P0; dossier required |
+| RC-13 | Clinician-selects assessment vs AI can apply recommendation | Workflow can overwrite source of decision | Store clinician initial choice, AI suggestion, edits, final clinician order separately | OWNER REQUIREMENT + reported implementation gap | 03,07,11 / clinical+engineering | P1; audit/event test |
+| RC-14 | Diagnosis/treatment AI support vs independent clinical decision | UI may appear final | AI hypothesis separate; authenticated clinician authors final diagnosis/treatment and amendments | OWNER APPROVED Decision 5 | 03,11,18 / clinical+legal | P0; API cannot finalize AI output |
+| RC-15 | CBDNA vs CBT nomenclature | Similar acronym/confusion | Always expand Cognitive Behavioral DNA as CBDNA and Cognitive Behavioral Therapy as CBT; glossary and UI disambiguation | ARCHITECTURAL RECOMMENDATION | 01,02,08,11 / product owner | P1; terminology/accessibility review |
+| RC-16 | Broad repositories/Google Drive-only Smart Guardian vs curated/versioned evidence | Source authority, permissions, staleness unclear | Authorized, curated, versioned sources; no source ingested solely because uploaded | OWNER Decision 6 + recommendation | 09,17 / knowledge governance | P1; rights and freshness tests |
+| RC-17 | Historical “Built” vs prior audit reports and missing repo | Unclear current state | Preserve claims as unverified until source/runtime evidence; report old defects as prior findings | EVIDENCE RULE | 04,18,19 / engineering reviewer | P0 audit; commit + reproducible tests |
+| RC-18 | Full service population vs one release decision | Scope choice still needed although vision retained | Choose first capability slice; do not erase other populations/programs from target architecture | OWNER APPROVED Decision 7; specific slice OPEN | 05,06,15 / owner | P0 planning; accepted release matrix |
+| RC-19 | Patient memory/AI session/research KB/evidence repository | Memories may leak across patient or purpose | Separate storage/access/retention; governed one-way transformation to research | OWNER APPROVED Decision 3 | 02,09,14,16,17 / privacy/research | P0; access and data-flow tests |
+| RC-20 | Candidate math techniques vs unvalidated universal CBDNA model | Architectural preference could fabricate science | Evaluate per construct and use; no model chosen until qualified validation | OWNER APPROVED Decision 1 | 08,16 / psychometric/research board | P3; model selection dossier |
+
+## Decision hierarchy
+
+The eight owner decisions in supplied prompt are authoritative. They do not waive scientific, clinical, legal, privacy, operational or security gates. For unresolved implementation choices, consult 06. Historical proposals are not owner approvals. The original seven documents remain unchanged; proposed section-level updates are listed in 18.
+
+## Additional reconciliation — psychometric governance proposal
+
+| Issue | Reconciled proposed rule | Status / acceptance |
+|---|---|---|
+| Measure exists vs may be used | Registry presence is discovery only; use requires exact scoped approval | Proposed; RTM-39/40 |
+| Contextual integration vs score aggregation | Evidence-informed formulation across separate measures is allowed; unsupported composites and causal claims are prohibited | Proposed clarification; RTM-42 |
+| AI recommendation vs clinician choice | AI proposes with evidence/reasons/alternatives/burden; clinician alone selects the assessment order | Proposed; RTM-43/44 |
+| Instrument version and longitudinal comparison | Compare only compatible versions/languages/methods/timeframes or a validated crosswalk | Proposed; RTM-46 |
+| New scale vs adequate evidence | Full development/evaluation lifecycle; Cronbach’s alpha alone is insufficient evidence of quality or validity | Proposed; RTM-49/50 |
