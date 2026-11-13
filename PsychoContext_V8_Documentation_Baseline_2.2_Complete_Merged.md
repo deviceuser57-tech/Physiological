@@ -1,10 +1,10 @@
-# PsychoContext V8 — Documentation Baseline 2.2.1: Corrective Working Revision
+# PsychoContext V8 — Documentation Baseline 2.2.2: Repository-Reconciled Working Revision
 
-**Revision:** 2.2.1-proposed (corrective documentation revision; owner/specialist ratification required)
+**Revision:** 2.2.2-proposed (repository-reconciled documentation revision; owner/specialist ratification required)
 **Base artifact:** Documentation Baseline 2.2, merged 2026-11-13 09:41:21 +02:00
 **Included documents:** 20 Markdown documents, numbered 00–19; document count and order are preserved.
 **Integrity note:** SHA-256 values embedded below identify the original raw source files as received before the 2.2 merge. They are provenance hashes, not hashes of the corrected embedded text in this maintained revision. Original 2.2 remains preserved on `main`.
-**Content note:** This is a maintained corrective copy of the 20-document merged artifact. Selected embedded sections are corrected for cross-document consistency; source filenames, source timestamps and original provenance hashes remain historical metadata.
+**Content note:** This is a maintained corrective copy of the 20-document merged artifact, with a repository-reconciliation update and execution-control cross-references. Selected embedded sections are corrected for cross-document consistency; source filenames, source timestamps and original provenance hashes remain historical metadata.
 **Change control:** Corrections are limited to documentation consistency, canonical entity/API naming, decision status, and repository-baseline evidence. No application code, schema, dependency, deployment, clinical workflow or instrument approval is changed or authorized by this document.
 
 ## Contents
@@ -148,6 +148,15 @@ This revision corrects known misreferences: ADR-017 removed because it does not 
 This maintained copy resolves confirmed documentation defects and adds a remote implementation evidence gate: (1) canonical entity names/cardinalities are aligned between the technical blueprint, RTM and CBDNA data dictionary; (2) ADR-006 and ADR-012 status fields now reflect their superseding owner decisions OD-006 and OD-008 while preserving unresolved implementation work; (3) CBDNA is consistently described as an owner-approved core engine with model/feature/clinical-use maturity still gated; (4) local-checkout evidence is explicitly separated from the current GitHub remote head; and (5) the current remote source inspection records authentication, authorization, Firestore test-target, AI endpoint and false-success persistence blockers. Original 2.2 remains preserved in Git history. Original 2.2 remains unchanged on `main`; this branch is the proposed corrective copy. The source SHA-256 values remain provenance hashes of the original pre-merge files.
 
 No application code, database schema, migrations, dependencies or deployment are changed or authorized by this documentation correction. Build/lint/tests were not run; implementation conformance remains unverified.
+
+
+## Addendum — execution authority and repository reconciliation (Revision 2.2.2)
+
+The controlled, file-level implementation sequence is maintained in `docs/execution/PsychoContext_V8_Master_Execution_Plan.md`, Revision 1.1-reconciled-draft. It is a delivery-control plan, not a replacement for this architecture package. It remains a proposal pending owner approval.
+
+The inspected repository contains older standalone root copies of documents 00–19 (for example, root 00 and 03 identify themselves as 2.0-proposed) alongside this merged 2.2.1 artifact. Until a synchronization decision is approved, this merged package is the controlling reconciled architecture reference; the root standalone copies are legacy snapshots and must not override it. Phase 0/1 must establish a document authority manifest and either synchronize canonical standalone copies or formally designate the root copies as historical. Do not maintain two active authorities.
+
+The repository-reconciled execution plan makes ADR-013 a Phase 0 hard gate, requires an owner-selected first user journey under ADR-001, and prohibits parallel Firebase/FastAPI/PostgreSQL sources of truth without an explicitly approved hybrid ownership contract. OD-001–OD-008 remain unchanged and owner-approved only within their stated boundaries. No open ADR or proposed psychometric recommendation is promoted by this addendum.
 
 --- END FULL SOURCE CONTENT ---
 
@@ -332,6 +341,15 @@ An instrument’s presence in a registry is not approval for administration. Pro
 
 Controlled relation predicates: `measured_by`, `candidate_indicator_of`, `associated_with`, `contextualized_by`, `contradicts`, `derived_from`, `supported_by`, `reviewed_by`, `supersedes`. General taxonomy excludes a `causes` edge; a causal claim requires a separate reviewed evidence model. Every relation carries source, scope, temporal validity, status/reviewer and limitations. Schema relationships do not license score combination, diagnosis or treatment.
 
+
+## Addendum — technology choice and migration gate (Revision 2.2.2)
+
+The inspected repository currently contains a React/TypeScript/Vite application, an Express server, Firebase Authentication/Firestore integration and Gemini routes. The target direction described above (FastAPI/PostgreSQL) is not yet an implemented backend and is not approved merely by appearing in this blueprint.
+
+**ADR-013 must be resolved before backend, identity or persistence implementation begins.** The owner and engineering/security reviewers must select one of: (A) retain Firebase as the authoritative backend and remediate it; (B) migrate to FastAPI/PostgreSQL using a staged, tested migration and cutover; or (C) approve a bounded hybrid with explicit ownership for identity, authorization, each entity, audit and persistence. A hybrid cannot leave two writable sources of truth.
+
+Until ADR-013 is approved, no new backend scaffold, database migration, production data movement or parallel identity system may be treated as authorized. The Current→Target→Migration map must identify exact existing files, target modules, data owners, read/write transition, reconciliation, rollback and the condition for retiring each legacy path. The existing Firebase implementation must not be deleted or bypassed before migration evidence and rollback are accepted.
+
 --- END FULL SOURCE CONTENT ---
 
 ---
@@ -435,6 +453,21 @@ The repository baseline must map each current route/component/collection/rule/ut
 ### Target deployment diagram (text)
 
 `React/TypeScript client → FastAPI gateway → modular domain services → PostgreSQL`. Identity/consent authorization precedes access. Encrypted object storage holds approved artifacts. A worker handles approved indexing/research jobs. Provider adapters receive minimum authorized payload and cannot commit decisions. Human safety path remains callable independently. During migration, Firebase is isolated behind an adapter until mapping and cutover/rollback pass; no big-bang assumption.
+
+
+## Addendum — additional repository findings from the inspected main commit
+
+The repository tree and source inspection at `main` commit `3445d55a4cca583d67546ca69c87e025fc0edd45` also identified the following static findings. These are not runtime test results:
+
+6. `src/services/clinicalDatabase.ts` contains a default hybrid scale named `MIL-PREP` with military-applicant wording, item weights and a generic unified percentage/severity interpretation. This must be disabled from active assessment paths until an exact instrument dossier, rights, population/language evidence and intended-use approval exist. The free civilian service boundary in document 13 must not be converted into an official admissions assessment or predictor.
+7. `src/App.tsx` reads/writes assessment and memory-case content through browser localStorage. Sensitive clinical content must not be treated as a browser preference; its storage, consent, access and retention must be governed.
+8. `src/services/clinicalDatabase.ts` accesses appointments and clinic settings, while the inspected active `firestore.rules` does not show explicit policies for those collections. Inventory all accessed collections and define deny-by-default policies.
+9. The repository has no visible Python/FastAPI backend, PostgreSQL schema, SQLAlchemy/Alembic migration set or CI workflow in the inspected tree. These are target-state work only if ADR-013 approves them.
+10. Root standalone documents 00–19 are older snapshots than the merged 2.2.1 artifact; a single document authority and synchronization decision is required.
+11. The existing `firestore.rules.test.ts` reads `DRAFT_firestore.rules`, includes an incomplete test without an assertion, and the package manifest does not expose a test command. The exact active ruleset and test runner must be selected and verified.
+12. The execution sequence previously placed clinical workflow before the still-open ADR-001 first-journey decision. The corrected plan makes Phase 4 the owner-selected first end-to-end journey and does not assume clinical-first.
+
+All findings must be rechecked at the exact implementation baseline commit. Static source inspection does not establish deployed configuration, exploitation, runtime behavior or security certification.
 
 --- END FULL SOURCE CONTENT ---
 
@@ -550,6 +583,30 @@ The supplied `pasted_content_5.txt` is explicitly a **proposed enhancement pendi
 **Not established:** runtime behavior, deployed build, actual role assignments, production rules, database contents, provider retention configuration, instrument rights/validity, safety operation, or pass/fail status. `npm run lint` did not complete because the terminal session became unavailable; build/tests were not run. No implementation, security, legal, scientific or clinical readiness is certified.
 
 Use labels precisely: `Observed source` = path read; `Declared` = package metadata; `Not run` = no execution result; `Inferred risk` = requires reproduction. Do not call an inferred risk a defect until a test reproduces it, or a declared script a pass without command/log/exit code.
+
+
+## Addendum — binding phase-order correction (Revision 2.2.2)
+
+The detailed phase/file/activity control is `docs/execution/PsychoContext_V8_Master_Execution_Plan.md` Revision 1.1-reconciled-draft. The following dependency correction is binding for planning and supersedes any interpretation that the clinical journey must be implemented first:
+
+| Phase | Required outcome |
+|---|---|
+| 0 | Owner approval, document authority, first-journey decision (ADR-001), technology/migration decision (ADR-013), accountable reviewers and change control |
+| 1 | Exact repository/document inventory, static finding recheck, reproducible build/test baseline, Current→Target→Migration map |
+| 2 | Shared verified identity, tenant/resource authorization and security foundation on the ADR-013-selected path |
+| 3 | Canonical data, consent, audit, persistence, retention/deletion, migrations and rollback |
+| 4 | The owner-selected first L1 end-to-end journey; not automatically clinical |
+| 5 | Psychometric registry, rights/evidence governance, administration and deterministic scoring |
+| 6 | Authenticated AI advisory and structured intake |
+| 7 | Knowledge and evidence governance |
+| 8 | Advanced Adaptive RAG with permission, Arabic quality and citation gates |
+| 9 | CBDNA L1 provenance engine; higher maturity only after scientific validation |
+| 10 | Therapy workspace and approved clinical capabilities |
+| 11 | Remaining applicant, education, family, school, university, workplace, institutional and research journeys, each separately governed |
+| 12 | Integrated verification, accessibility, safety/privacy/security review and controlled pilot readiness |
+| 13 | Production release, monitoring, rollback and continuous governance |
+
+If the owner selects the free civilian applicant wellbeing service as the first journey, its service-specific safeguards and approvals move into Phase 4. If the owner selects clinical care, the applicant program remains a separate journey. The full platform vision and maturity levels remain preserved; sequencing is not deletion.
 
 --- END FULL SOURCE CONTENT ---
 
@@ -1978,6 +2035,23 @@ The 11 November proposal is marked pending owner approval; it does not alter OD-
 ### Additional gaps and implementation gates
 
 Open work includes candidate-measure dossiers and rights, version-specific Arabic/Egyptian evidence, state-transition authority, overlap/burden methodology, validated crosswalk criteria, adaptive recommendation evaluation, exact report schema, retention/deletion mapping, new-measure development protocol, and local safety operations. Cronbach’s alpha alone is not sufficient evidence of validity or overall quality. Before clinical activation, test RTM-39–52; calibrate and approve thresholds with qualified reviewers. External sources mentioned in submitted prose were not independently verified in this documentation update. No feature implementation is certified.
+
+
+## Addendum — repository-reconciled execution readiness (Revision 2.2.2)
+
+A separate master execution plan has now been reconciled against the GitHub repository tree and source files:
+
+- Repository: `deviceuser57-tech/Physiological`
+- Inspected branch/commit: `main` / `3445d55a4cca583d67546ca69c87e025fc0edd45`
+- Execution control: `docs/execution/PsychoContext_V8_Master_Execution_Plan.md`, Revision 1.1-reconciled-draft
+- Planning branch: `planning/master-execution-plan-v1.1`
+- Review pull request: #3 (draft; not merged)
+
+The execution plan records findings R-01–R-12, exact current repository paths, document authority conflict, technology decision gate, corrected selectable first-journey sequence, stop-ship controls, phase exit evidence and change-control rules.
+
+**Implementation status:** no application code, Firestore rules, dependencies, schema, migration or deployment has been changed by this documentation revision. No local build, test runner, Firebase emulator, production rules, provider contract, runtime or clinical operation was verified. Phase 1 must execute and preserve those checks. This package therefore remains proposed and does not authorize processing real clinical or applicant data.
+
+The immediate next steps are owner review of the plan; resolution/bounding of ADR-001 and ADR-013; approval of the document authority manifest; then Phase 1 repository baseline and Phase 2 security foundation. No feature implementation begins by skipping these gates.
 
 --- END FULL SOURCE CONTENT ---
 
