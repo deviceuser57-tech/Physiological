@@ -529,7 +529,8 @@ This document is versioned. Every accepted change must include:
 
 | Version | Status | Change |
 |---|---|---|
-| 1.0-draft | Superseded draft | Initial complete phase roadmap and file-level activity register |\n| 1.1-reconciled-draft | Repository-reconciled corrective draft | Adds verified current-repo findings, resolves stale-document authority, makes ADR-013 a hard architecture gate, and replaces the implicit clinical-first sequence with a selectable first-journey gate |
+| 1.0-draft | Superseded draft | Initial complete phase roadmap and file-level activity register |
+| 1.1-reconciled-draft | Repository-reconciled corrective draft | Adds verified current-repo findings, resolves stale-document authority, makes ADR-013 a hard architecture gate, and replaces the implicit clinical-first sequence with a selectable first-journey gate |
 
 **Final governance principle:** The plan is a living controlled baseline, not a static checklist. The application is built by completing, evidencing and accepting each phase in sequence. A later discovery can change the plan, but it cannot bypass traceability, review or approval.
 
