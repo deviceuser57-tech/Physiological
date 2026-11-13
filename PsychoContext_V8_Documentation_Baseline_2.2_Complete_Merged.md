@@ -158,13 +158,6 @@ The inspected repository contains older standalone root copies of documents 00�
 
 The repository-reconciled execution plan makes ADR-013 a Phase 0 hard gate, requires an owner-selected first user journey under ADR-001, and prohibits parallel Firebase/FastAPI/PostgreSQL sources of truth without an explicitly approved hybrid ownership contract. OD-001–OD-008 remain unchanged and owner-approved only within their stated boundaries. No open ADR or proposed psychometric recommendation is promoted by this addendum.
 
-## Addendum — execution authority and repository reconciliation (Revision 2.2.2)
-
-The controlled, file-level implementation sequence is maintained in `docs/execution/PsychoContext_V8_Master_Execution_Plan.md`, Revision 1.1-reconciled-draft. It is a delivery-control plan, not a replacement for this architecture package. It remains a proposal pending owner approval.
-
-The inspected repository contains older standalone root copies of documents 00–19 (for example, root 00 and 03 identify themselves as 2.0-proposed) alongside this merged 2.2.1 artifact. Until a synchronization decision is approved, this merged package is the controlling reconciled architecture reference; the root standalone copies are legacy snapshots and must not override it. Phase 0/1 must establish a document authority manifest and either synchronize canonical standalone copies or formally designate the root copies as historical. Do not maintain two active authorities.
-
-The repository-reconciled execution plan makes ADR-013 a Phase 0 hard gate, requires an owner-selected first user journey under ADR-001, and prohibits parallel Firebase/FastAPI/PostgreSQL sources of truth without an explicitly approved hybrid ownership contract. OD-001–OD-008 remain unchanged and owner-approved only within their stated boundaries. No open ADR or proposed psychometric recommendation is promoted by this addendum.
 
 --- END FULL SOURCE CONTENT ---
 
