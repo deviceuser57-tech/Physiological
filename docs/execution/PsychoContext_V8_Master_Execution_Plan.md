@@ -739,3 +739,42 @@ The first code change is **not** a feature and is not automatically a FastAPI mi
 This review did not execute a clean checkout, install dependencies, run Vite build, TypeScript checks, Firebase emulator, tests, deployment, or inspect production Firebase/Gemini settings. It did not verify live user accounts, actual deployed rules, data residency, provider contracts, clinical operations or instrument licenses. These are explicit Phase 1/2/5/6 verification tasks, not assumed facts.
 
 **Revision 1.1 conclusion:** The original 13-phase plan is retained as the broad work inventory, but the corrected authority rules, technology decision gate, selectable first-journey sequence, exact current-file map and stop-ship controls in this addendum are mandatory. The plan is ready for owner review; it is not itself authorization to process real data or deploy.
+
+
+## J. Phase 4 branch-specific work packets — no hidden clinical-first assumption
+
+The original detailed Phase 4 activities (clinical workflow state machine, patient registration, encounters, complaint intake, clinician formulation and sign-off) apply **only if ADR-001 selects the clinical journey**. They are not mandatory prerequisites for a different first journey.
+
+Before Phase 4 starts, Phase 0/1 must create exactly one approved packet selected from the following patterns:
+
+### J.1 If the owner selects the clinical journey
+
+Use original activities 4.1–4.9 and the existing clinical paths listed in Section D. In addition, confirm clinical lead, credentials, intended use, safety operations, consent, exact enabled instruments and clinician sign-off semantics. Keep all AI, assessment and safety functions disabled until their independent gates pass.
+
+### J.2 If the owner selects the free civilian Military Applicant Psychological Readiness Program
+
+Create a Phase 4 packet with these activities:
+
+| Activity | Files to use / create / modify | Role and acceptance evidence |
+|---|---|---|
+| 4A.1 Define eligibility, age range, service boundaries and no-affiliation wording | Document 13; documents 01/15; ADR-007/008; [NEW] 'docs/services/READINESS_SERVICE_OPERATING_MODEL.md' | Approved eligibility and age policy; explicit free/civilian/non-official scope; no admission prediction, pass/fail, fitness or deception coaching |
+| 4A.2 Define purpose-specific consent, minimal intake and separate participant identity/data | Documents 13/14; selected identity/data modules; [NEW] service consent/data-flow spec | Purpose, age/guardian safeguards and data separation tests; no national ID/audio by default |
+| 4A.3 Build psychoeducation and developmental support journey | Document 13; [NEW] readiness service UI/API/content modules | Reviewed content and exercises labeled educational/developmental, not standardized tests |
+| 4A.4 Add voluntary goals, follow-up and reassessment only where measures are approved | Documents 12/13/15; instrument registry from Phase 5 if required | No measure or cutoff without exact version/rights/population/purpose approval; progress feedback is not admission likelihood |
+| 4A.5 Define safety, referral and human service ownership | Documents 11/13/14; [NEW] referral/safety runbook and named coverage matrix | Verified human owner, coverage, referral pathway and failure fallback before public use |
+| 4A.6 Define service evaluation, complaints and free-service operations | Document 13; [NEW] evaluation and complaints specification | Funding/operator, service capacity, evaluation metrics and complaint owner approved |
+
+**Applicant-program stop condition:** Do not enable the journey for minors or any user age not explicitly approved. Do not use the embedded 'MIL-PREP' hybrid scale as an official, validated or admissions-related instrument. Disable it until an exact independent dossier is approved under document 12. Do not claim that the service improves admission outcomes.
+
+### J.3 If the owner selects another L1 journey
+
+Create a dedicated Phase 4 packet defining eligibility, purpose, user roles, consent, data partition, workflow, human ownership, referral/safety, evaluation, exact existing files, new paths, acceptance tests and rollback. No domain-specific clinical activity is inherited merely because it exists in the old Phase 4 table.
+
+### J.4 ADR-013 implementation-path restriction inside Phase 2
+
+The original Phase 2 Firestore activity is conditional:
+- Under **Path A (Firebase retained)**, repair and test 'firestore.rules', remove or archive 'DRAFT_firestore.rules' only through change control, and ensure tests load the exact authoritative rules.
+- Under **Path B (FastAPI/PostgreSQL migration)**, implement the approved backend authorization policy as the target authority. Firestore rules may be hardened only as a temporary transition control if Firebase remains reachable; do not build a second permanent authorization model.
+- Under **Path C (bounded hybrid)**, every data class/entity must have one named authoritative write owner and a contract test proving no split-brain writes.
+
+The chosen path must be visible in the Phase 2 packet and the Current→Target→Migration map before any security or persistence code is changed.
