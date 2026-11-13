@@ -1,9 +1,9 @@
 # PsychoContext V8 — Master Execution Plan
 **Document ID:** PC-V8-MEP-001  
-**Version:** 1.0-draft  
-**Status:** Proposed execution baseline — requires owner approval before Phase 1 implementation  
+**Version:** 1.1-reconciled-draft  
+**Status:** Repository-reconciled corrective draft — requires owner approval before Phase 0/1 implementation  
 **Repository:** `deviceuser57-tech/Physiological`  
-**Planning branch:** `planning/master-execution-plan-v1`  
+**Planning branch:** `planning/master-execution-plan-v1.1`  
 **Baseline:** Documentation Baseline 2.2.1-proposed and the current repository source snapshot inspected during the November 2026 audit  
 **Purpose:** One controlled, traceable plan for modifying the existing repository and completing the PsychoContext application through sequential, formally accepted phases.
 
@@ -529,6 +529,253 @@ This document is versioned. Every accepted change must include:
 
 | Version | Status | Change |
 |---|---|---|
-| 1.0-draft | Proposed for owner approval | Initial complete phase roadmap and file-level activity register |
+| 1.0-draft | Superseded draft | Initial complete phase roadmap and file-level activity register |
+| 1.1-reconciled-draft | Repository-reconciled corrective draft | Adds verified current-repo findings, resolves stale-document authority, makes ADR-013 a hard architecture gate, and replaces the implicit clinical-first sequence with a selectable first-journey gate |
 
 **Final governance principle:** The plan is a living controlled baseline, not a static checklist. The application is built by completing, evidencing and accepting each phase in sequence. A later discovery can change the plan, but it cannot bypass traceability, review or approval.
+
+
+---
+
+# Revision 1.1 — Repository reconciliation and mandatory execution corrections
+
+**Revision status:** Corrective planning proposal; owner approval required.  
+**Repository inspected:** `deviceuser57-tech/Physiological`, default branch `main`.  
+**Inspected main commit:** `3445d55a4cca583d67546ca69c87e025fc0edd45`.  
+**Inspected tree SHA:** `01563e716e3d9cb24e5fc96023919021c2162f98`.  
+**Inspection method:** GitHub repository tree and static source-file inspection. No local build, runtime, emulator, deployed Firestore rules, or automated test suite was executed during this review. Findings below are therefore **static source findings**, not runtime/security certification.
+
+This revision is an authoritative corrective addendum to version 1.0. Where the earlier plan conflicts with this addendum, this addendum controls. The original phase activities remain useful only where they do not conflict with the corrections below.
+
+## A. Verified repository baseline and document authority
+
+### A.1 Actual repository shape
+
+The inspected repository is an existing application, not an empty target scaffold. The current top-level application includes:
+
+- React/TypeScript/Vite frontend under `src/`.
+- Express server in root `server.ts`.
+- Firebase Authentication/Firestore client integration in `src/lib/firebase.ts` and related services.
+- Firestore rules in `firestore.rules`, plus a separate `DRAFT_firestore.rules`.
+- Gemini integration in `server.ts`.
+- Clinical UI and domain logic in `src/App.tsx`, `src/components/`, `src/services/`, `src/types/clinical.ts`, and `src/utils/`.
+- Existing Firebase-oriented configuration: `firebase-blueprint.json`, `firebase-applet-config.json`, `.env.example`.
+- Existing execution plan: `docs/execution/PsychoContext_V8_Master_Execution_Plan.md`.
+- Existing merged documentation artifact: `PsychoContext_V8_Documentation_Baseline_2.2_Complete_Merged.md`.
+- Individual documents `00`–`19` in the repository root.
+
+The inspected tree contains no established Python backend directory, FastAPI application, SQLAlchemy/Alembic migrations, PostgreSQL schema, or visible CI workflow. Their absence from this inspected tree means they are **not existing implementation assets**; they are future target work if ADR-013 approves that direction.
+
+### A.2 Documentation source-of-truth correction
+
+The merged artifact's filename contains `2.2`, while its internal title identifies it as **Baseline 2.2.1 / Revision 2.2.1-proposed**. Its internal text states that the 20-document count/order is preserved and that it is a maintained corrective copy.
+
+The individual root files `00`–`19` are older standalone snapshots. For example, root `00` identifies itself as version 2.0-proposed, and root `03` identifies itself as version 2.0-proposed. They must not be treated as synchronized copies of the merged 2.2.1 revision.
+
+**Binding rule until document synchronization is accepted:**
+
+1. The merged 20-document artifact is the controlling reconciled architecture reference for planning, subject to its stated proposed/open/approved statuses.
+2. Root individual files `00`–`19` are legacy snapshots/reference material only; where they differ from the merged artifact, they do not override it.
+3. No implementation agent may silently choose whichever copy is more convenient.
+4. Phase 0/1 must create a document authority manifest and a reproducible synchronization plan. The owner must choose either (a) split the approved merged sections into synchronized standalone files in a clearly defined canonical directory, or (b) explicitly keep the merged artifact as the only active architecture package and mark root standalone copies as historical. Do not maintain two competing active copies.
+5. The master execution plan is a delivery-control document; it does not replace the 20-document architecture package.
+
+**Required files:**  
+- [REVIEW] `PsychoContext_V8_Documentation_Baseline_2.2_Complete_Merged.md`
+- [REVIEW] root `00 — ...md` through `19 — ...md`
+- [MODIFY] `docs/execution/PsychoContext_V8_Master_Execution_Plan.md`
+- [NEW] `docs/execution/BASELINE_MANIFEST.md`
+- [NEW] `docs/architecture/DOCUMENT_AUTHORITY_AND_SYNC_PLAN.md` (or an owner-approved equivalent)
+
+**Exit evidence:** document-to-document version/status matrix, canonical source decision, exact hashes/commit, and no unresolved authority conflict.
+
+### A.3 Static findings that must be rechecked in Phase 1
+
+| ID | Observed path(s) | Static observation | Required action / gate |
+|---|---|---|---|
+| R-01 | `src/services/clinicalAuth.ts` | Preset staff accounts and PIN values are embedded in source; login accepts hard-coded bypass values; staff identity/role is persisted in browser storage. | Replace with verified identity-provider principal and server-side authorization. No browser value may establish a role. |
+| R-02 | `firestore.rules` | Active rules allow any signed-in user to read user documents; doctor authorization is derived from a Firestore role document; patient/visit access is role-wide and does not enforce record owner/tenant relationship in the rule itself. | Define one authoritative access model; enforce tenant, clinician relationship and resource ownership. Test deployed/active rules or remove them only after an approved data migration. |
+| R-03 | `DRAFT_firestore.rules`, `firestore.rules.test.ts` | Draft rules use owner checks, but the current test reads the draft rules, has an incomplete test without assertions, and does not prove the active ruleset. | Select the authoritative ruleset; test the exact rules artifact used in deployment, including allowed and denied cases. |
+| R-04 | `server.ts` | AI routes accept request bodies containing complaint/demographic/assessment material; no route-level verified identity/authorization is visible in the inspected handlers. | Add authenticated API boundary, authorization, purpose/consent checks, payload minimization, rate limiting, validation and audit before sensitive AI processing. |
+| R-05 | `src/services/clinicalDatabase.ts` | Patient and visit write failures are caught and still return generated IDs, creating success-shaped results despite failed persistence. | Return explicit typed failure; show unsaved/retry state; never add failed writes to confirmed saved history. |
+| R-06 | `src/utils/psychometrics.ts`, `src/App.tsx` | Assessment scoring/interpretation is performed in frontend code; the UI directly calls the calculation function. | Move authoritative calculation to a deterministic, versioned server domain after exact instrument approval. Frontend may render results, not establish authoritative scores. |
+| R-07 | `src/services/clinicalDatabase.ts` | A default `MIL-PREP` hybrid instrument is embedded with military-applicant wording, item weights and a unified percentage/severity interpretation. | Disable/remove it from active assessment paths pending a separate owner-approved and rights/evidence-reviewed instrument dossier. Align any future applicant service with document 13; never imply official admission testing or prediction. |
+| R-08 | `src/App.tsx` | Assessment and memory-case content is read from/written to browser localStorage. | Treat these as sensitive records; remove clinical content from localStorage or restrict it to non-sensitive UI preferences. Establish approved server-side storage, consent, retention and deletion. |
+| R-09 | `server.ts` | Prompt/schema asks the model to infer voice tone and speech rate from complaint text. | Remove text-only acoustic inference. Acoustic claims require actual audio, separate consent, validated processing and modality-specific evidence. |
+| R-10 | `package.json`, `firestore.rules.test.ts` | Manifest exposes `build` and TypeScript `lint`, but no test command or clear configured test runner is present; the rules test uses test globals without an evident runner script. | Choose and pin a test runner; add deterministic test scripts and CI. Establish baseline before code changes. |
+| R-11 | `src/services/clinicalDatabase.ts`, `firestore.rules` | App code accesses appointments and clinic settings; the active rules inspected do not show corresponding explicit collection policies. | Inventory every collection and define deny-by-default policies for each. Test unauthorized reads/writes. |
+| R-12 | `src/App.tsx`, `src/components/`, `src/services/` | Existing frontend combines assessment, CBT, memory, cloud database, permissions, appointments, workspace and voice-related flows. | Build a route/component/data-flow inventory and split by domain boundary without deleting existing capability from the full product vision. |
+
+All findings must be rechecked at the exact Phase 1 starting commit. A finding may be closed only with code reference, test evidence and reviewer sign-off.
+
+## B. Mandatory correction to architecture and technology sequencing
+
+The previous plan references the Python/FastAPI/PostgreSQL target while also prescribing changes to Firebase rules and existing Firebase services. That can create two competing authentication and persistence authorities if the migration strategy is not decided first.
+
+**ADR-013 is a hard Phase 0 decision, not an implementation detail to postpone until Phase 3.** Before implementing a new backend, the owner and engineering/security reviewers must select one explicit path:
+
+- **Path A — Retain Firebase as the authoritative backend for the selected release.** Keep the existing stack, but repair identity, rules, ownership, audit, persistence and test controls. Do not create a parallel PostgreSQL system of record.
+- **Path B — Migrate to the target modular monolith (FastAPI + PostgreSQL).** Define migration stages, canonical API contracts, data export/import, reconciliation, rollback and a cutover rule. Firebase may remain temporarily as a read-only/transition source only if explicitly approved. Do not dual-write clinical records without a documented consistency protocol and tests.
+- **Path C — Approved hybrid with bounded responsibilities.** Specify exactly which service owns identity, each entity, authorization, audit and persistence. “Hybrid” is not an acceptable decision by itself.
+
+The target blueprint may recommend Path B, but the recommendation does not close ADR-013. No backend scaffolding, database migration, new identity implementation or production data movement begins until the selected path, hosting region, data residency, identity provider, secrets, operations and rollback have been approved.
+
+**Required updates:** ADR-013 in document 06; architecture decision and current→target migration sections in document 03; reconciliation matrix document 10; RTM rows in document 07; this plan and Phase 1/2 packets.
+
+## C. Corrected phase dependency model
+
+The earlier sequence implicitly makes the clinical workspace the first journey (Phase 4) and places the applicant program in Phase 11, despite ADR-001 remaining open. This is not permitted.
+
+The corrected sequence is:
+
+| Phase | Corrected name | Mandatory outcome | Dependency / exit gate |
+|---|---|---|---|
+| 0 | Governance, authority and scope lock | Approve plan governance; resolve/bound ADR-001 and ADR-013; establish document authority; assign accountable reviewers; define first journey and release boundaries. | Owner-approved decisions, technology path, reviewers, risk owners and change control. |
+| 1 | Repository and documentation baseline | Inventory exact commit/tree; recheck R-01–R-12; map routes/components/API/data collections; run baseline commands; establish tests/CI feasibility; produce Current→Target→Migration map. | Reproducible source/build/test baseline or documented blockers; accepted inventory and migration map. |
+| 2 | Shared security and identity foundation | Implement only the selected ADR-013 path; verified identity, tenant/role/resource authorization, secrets, audit and deny-by-default access. | Positive and negative tests prove identity and isolation; no preset login or client-authoritative role. |
+| 3 | Canonical data, consent and persistence foundation | Canonical entities, data ownership, migrations, provenance, consent, retention, deletion/correction, audit and failure semantics. | Repeatable migration/rollback, no false save success, data lifecycle and access tests. |
+| 4 | **Owner-selected first end-to-end journey** | Implement the exact journey selected in ADR-001 on shared foundations. It may be clinical, applicant wellbeing, or another owner-approved L1 journey. | Journey-specific work packet, clinical/legal/privacy/psychometric gates as applicable, end-to-end synthetic acceptance. |
+| 5 | Psychometric governance and approved assessment | Versioned registry, rights/evidence states, administration, deterministic scoring, recommendation controls and report provenance. | No instrument active without exact version/language/population/purpose/rights approval and golden test vectors. |
+| 6 | AI advisory and structured intake | Authenticated AI gateway, provider approval, structured extraction, source spans, uncertainty, clinician review and safe fallback. | Provider/legal/privacy approval and route-level authorization; AI cannot diagnose, sign, select unapproved tools or infer acoustics from text. |
+| 7 | Knowledge and evidence governance | Multi-axial taxonomy, construct/evidence registries, lifecycle and specialist approval. | Provenance, relation semantics, versioning, review and access tests. |
+| 8 | Advanced Adaptive RAG | Authorized ingestion/retrieval, version-aware sources, citations, abstention and Arabic/Egyptian evaluation. | Permission and leakage tests, prompt-injection resistance, citation/quality/cost/latency thresholds. |
+| 9 | CBDNA foundational engine | L1 source/provenance ledger and typed relations; L2+ only under separate scientific validation. | No diagnosis, universal score, safety classification or autonomous treatment; model-specific review for each increment. |
+| 10 | Therapy workspace and additional clinical capabilities | CBT and other approved clinical workflows with clinician authorship and versioned content. | Clinical content, workflow, credential and safety approvals; tests of human authority. |
+| 11 | Additional populations and service journeys | Applicant program, education/family/school/university/workplace/community and institutional workflows not already selected in Phase 4. | Each service has separate eligibility, purpose, consent, roles, data partition, referral and evaluation approval. No service is silently removed. |
+| 12 | Integrated verification and controlled pilot readiness | RTM closure, end-to-end, security, privacy, clinical, psychometric, accessibility, operations and pilot evidence. | All P0/P1 criteria and named sign-offs. Synthetic pilot unless separate real-data authorization exists. |
+| 13 | Production release and continuous governance | Deployment, monitoring, backup/restore, rollback, incident response, periodic reviews and change control. | Explicit go-live approval and operational ownership. |
+
+**Important:** Phase 4 is not hard-coded as clinical-first. If the owner selects the applicant wellbeing journey, its service specification and safeguards move into Phase 4; clinical-only activities remain gated and are not prerequisites unless a documented dependency requires them. If the clinical journey is selected, applicant-service work remains a separate Phase 11 track. The same rule applies to any other selected journey.
+
+The sequence does not mean every domain is a separate product or that all Level 4 capabilities must be built before application completion. It means each capability remains in the full architecture, is assigned a maturity level and is activated only after its own gates.
+
+## D. Corrected exact-file execution map
+
+The plan must distinguish **existing repository paths** from **new target paths**. New paths are not to be assumed to exist.
+
+| Work packet | Existing files to inspect/change where applicable | New files or artifacts | Why / required proof |
+|---|---|---|---|
+| Phase 0 — decision and authority | Merged 20-document baseline; root `00`–`19`; `docs/execution/PsychoContext_V8_Master_Execution_Plan.md` | `docs/execution/BASELINE_MANIFEST.md`; `docs/architecture/DOCUMENT_AUTHORITY_AND_SYNC_PLAN.md`; `docs/execution/PHASE_APPROVAL_MATRIX.md`; ADR decision record | One authoritative document source; signed first-journey and technology decisions; no ambiguous reviewer authority. |
+| Phase 1 — repository baseline | Entire tree; `package.json`, `bun.lock`, `tsconfig.json`, `vite.config.ts`, `index.html`, `src/App.tsx`, all `src/components/**`, `src/services/**`, `src/types/clinical.ts`, `src/utils/**`, `src/lib/firebase.ts`, `server.ts`, `firestore.rules`, `DRAFT_firestore.rules`, `firestore.rules.test.ts`, Firebase config, `.env.example`, assets and existing docs | `docs/engineering/REPOSITORY_INVENTORY.md`; `docs/engineering/CURRENT_TARGET_MIGRATION_MAP.md`; `docs/engineering/ROUTE_COMPONENT_DATAFLOW_MAP.md`; `docs/quality/BASELINE_TEST_REPORT.md`; CI workflow if absent | Exact current state, route/API/data ownership, baseline build/typecheck/test outputs, keep/refactor/replace/retire decisions. |
+| Phase 2 — security and identity | `src/services/clinicalAuth.ts`; `src/components/StaffLoginModal.tsx`; `src/App.tsx`; `src/lib/firebase.ts`; `server.ts`; `firestore.rules`; `DRAFT_firestore.rules`; `firestore.rules.test.ts`; any API auth middleware | Identity/access design; tenant/resource matrix; auth/policy modules appropriate to approved ADR-013 path; security-event catalog; integration/negative tests | Remove preset credentials and browser role trust; enforce user, tenant and record relationship; prove unauthorized access fails. |
+| Phase 3 — data and lifecycle | `src/types/clinical.ts`; `src/services/clinicalDatabase.ts`; `firebase-blueprint.json`; `firestore.rules`; data services and local persistence in `src/App.tsx` | Canonical entity catalog; schema/migrations if approved; consent/retention/deletion register; audit event catalog; migration/rollback/restore scripts | One source of truth; data-class separation; transaction/failure behavior; lineage and lifecycle tests. |
+| Phase 4 — selected journey | Existing relevant UI components, `src/App.tsx`, service and type files identified in Phase 1; document 13 if applicant service; document 11 if clinical | Journey specification, API contract, UI flow, data model additions, test fixtures and acceptance script | Complete synthetic UI→API→persistence→readback/failure flow; journey owner signs off. |
+| Phase 5 — psychometrics | `src/utils/psychometrics.ts`; `src/types/clinical.ts`; `src/components/QuestionnaireStep.tsx`; `src/components/DemographicsStep.tsx`; `src/components/DashboardView.tsx`; `src/services/clinicalDatabase.ts`; any hybrid-scale UI | Instrument registry/state machine; scoring specification registry; administration/response/result entities; per-instrument dossiers; golden test vectors | Disable unapproved measures; exact version and rights state; deterministic repeatable scoring; no unsupported composite or contextual score modification. |
+| Phase 6 — AI and voice | `server.ts`; `src/components/VoiceInputAssistant.tsx`; `src/components/VoiceComplaintIntake.tsx`; `src/utils/aiRecommender.ts`; relevant API/UI types | AI gateway/provider register; use-case register; output schemas; review events; provider/failure tests | Verified identity and purpose; source-linked AI hypotheses; consent/provider approval; no text-only acoustic inference. |
+| Phase 7 — knowledge | Existing knowledge-related docs and any current UI/data artifacts found in inventory | Taxonomy, construct, evidence, claim, review and version APIs/UI/schema as approved | Many-to-many relation semantics, provenance and specialist publication gates. |
+| Phase 8 — RAG | `src/services/driveClinicalService.ts` and any actual ingestion/retrieval code discovered in inventory; `server.ts`; document 17 | Source registry, ingestion/index pipeline, permission matrix, evaluation benchmark, citation and retrieval test suites | No assumption that Drive upload equals trusted/authorized source; authorization before retrieval; Arabic quality and leakage evidence. |
+| Phase 9 — CBDNA | `src/components/ClinicalMemoryBankView.tsx`; `src/components/ClinicalCloudDatabaseView.tsx`; `src/types/clinical.ts`; `src/services/clinicalDatabase.ts`; docs 08/16 | CBDNA feature/version/observation/relation/lineage/review modules and L1/L2 test plans | Separate patient memory from candidate/approved research; source immutability; time/context/uncertainty; no autonomous decisions. |
+| Phase 10 — therapy | `src/components/CbtModule.tsx`; `src/components/TreatmentPathwaysSection.tsx`; `src/components/ClinicalWorkspaceView.tsx`; `src/types/clinical.ts` | Therapy protocol registry, session/homework/outcome contracts and approved content | Clinician authorship, source/version and workflow tests; AI suggestions remain non-authoritative. |
+| Phase 11 — additional journeys | Relevant existing route/components/services; documents 13/14/15 and other service definitions | Separate service specs, eligibility/consent/access/data contracts, referral/operating model and evaluation | Each service accepted independently; no cross-service data access by role assumption. |
+| Phase 12/13 — release/operations | Entire application, config, CI, rules, tests, environment and deployment artifacts | Release dossier, runbooks, monitoring, backup/restore, rollback, incident and support procedures | Reproducible release evidence, sign-offs, alert/recovery rehearsal and accountable operators. |
+
+If a path named above is absent at Phase 1, record it as **NEW** only after confirming no equivalent exists. If an equivalent exists, map it rather than duplicating it.
+
+## E. Mandatory stop-ship controls before any real clinical or sensitive applicant data
+
+1. Remove preset staff credentials and all hard-coded PIN bypasses.
+2. Do not trust role, credential, memory-unlock or authorization state stored in localStorage.
+3. Enforce verified identity and server/data-layer authorization for every sensitive route and collection.
+4. Resolve owner/tenant/resource access; role-only access is insufficient for patient records.
+5. Test the exact active/deployed access policy, not a draft.
+6. Add explicit policies for every collection actually accessed, including appointments and clinic settings.
+7. Make failed writes visibly fail; do not return success-shaped IDs.
+8. Remove sensitive assessment/memory content from localStorage.
+9. Block the default `MIL-PREP` hybrid scale and its generic weighted/severity calculation until a separately approved measure dossier exists; preserve the free civilian service boundary.
+10. Do not send clinical content to Gemini or another external provider until provider, region, retention, training use, contract, consent and purpose are approved.
+11. Remove inference of voice tone/speech rate from text-only complaint content.
+12. Do not activate any assessment instrument until exact form/version, language, population, purpose, rights, administration and scoring are approved.
+13. Keep all development, demo and test data synthetic.
+14. Do not describe static inspection or a successful frontend build as clinical, privacy, legal or security certification.
+
+## F. Corrected Phase 1 baseline commands and evidence
+
+The current `package.json` exposes `build`, `lint` (currently TypeScript no-emit), `dev` and `start`; it does not expose a test command in the inspected manifest. The existing rules test references `DRAFT_firestore.rules` and includes an incomplete test. Therefore Phase 1 must not assume the test suite is runnable.
+
+Phase 1 must:
+
+- Record Node/Bun versions and lockfile policy; do not mix npm/yarn/bun lockfiles without a decision.
+- Run the existing build and lint commands in a clean checkout and preserve complete logs.
+- Determine whether `bun.lock` is the authoritative lockfile and document the supported install command.
+- Select a test runner and add explicit scripts only after checking compatibility with the current TypeScript/Vite/Firebase versions.
+- Configure Firestore emulator/rules tests only if Firebase remains in the selected ADR-013 path.
+- Add CI for formatting/lint/typecheck/unit/integration/build; do not claim CI exists until a workflow is present and passes.
+- Capture known failures before fixes; use the same commands after each phase to detect regressions.
+- Keep secrets out of logs and fixtures; redact environment values.
+
+**Phase 1 evidence package:** exact commit/tree, file inventory, route/component/API/data map, environment/lockfile report, baseline build/lint/test logs, all static finding recheck outcomes, current→target→migration map, and approved test/CI strategy.
+
+## G. Required decision updates and cross-document synchronization
+
+Before Phase 2 begins, update the decision and requirement records as follows:
+
+- **ADR-001:** choose the first live journey, population, operating service, scope, and explicitly disabled/deferred journeys. OD-007 remains intact; this is sequencing, not domain deletion.
+- **ADR-005:** no external AI transmission of sensitive data before provider and processing approval.
+- **ADR-007 / ADR-008:** minors and safety/referral coverage remain blocked until legal/clinical/operational review; disable affected paths.
+- **ADR-009:** define verified identity, tenant, organization membership, clinician credential, role grant and resource-level authorization.
+- **ADR-010:** define data-class-specific consent, retention, correction, export, deletion and backup handling.
+- **ADR-013:** choose Path A/B/C in Section B; identify authoritative identity and data stores and migration/cutover plan.
+- **ADR-014:** distinguish attributable clinical sign-off from any legally binding electronic signature claim.
+- **ADR-016:** preserve exact commit, source hashes, command logs and reviewer evidence.
+- **RTM:** add or map independently testable requirements for active rules, ownership/tenant boundaries, localStorage sensitive-data removal, failed persistence, appointment/settings access, AI route authorization, modality correctness, instrument activation, migration reconciliation and CI/test coverage. Preserve existing IDs; use new IDs only through the documented crosswalk.
+- **Docs 00–19:** update only the authoritative 2.2.2 source and synchronized canonical copies after approval. Keep OD-001–OD-008 statuses unchanged. Do not promote proposed psychometric recommendations or open ADRs by implementation convenience.
+
+## H. Revised first implementation instruction
+
+The first code change is **not** a feature and is not automatically a FastAPI migration. The sequence is:
+
+1. Owner accepts this revised plan and confirms the controlling document source.
+2. Phase 0 closes/bounds ADR-001 and ADR-013 and names reviewers.
+3. Phase 1 rechecks the exact repository commit and produces the evidence package.
+4. The selected architecture path is implemented in Phase 2; Firebase and FastAPI/PostgreSQL are not run as competing sources of truth.
+5. Phase 3 establishes canonical data, consent, audit and migration integrity.
+6. Phase 4 implements the owner-selected first end-to-end journey.
+7. Remaining capabilities proceed through their own phases and maturity gates.
+8. No next phase begins until the prior phase exit report is accepted and its commit is identified.
+
+**No direct edits to application code are authorized by this planning revision.** This revision changes execution control only. All code remediation remains assigned to its approved phase work packets.
+
+## I. Review limitations and open verification
+
+This review did not execute a clean checkout, install dependencies, run Vite build, TypeScript checks, Firebase emulator, tests, deployment, or inspect production Firebase/Gemini settings. It did not verify live user accounts, actual deployed rules, data residency, provider contracts, clinical operations or instrument licenses. These are explicit Phase 1/2/5/6 verification tasks, not assumed facts.
+
+**Revision 1.1 conclusion:** The original 13-phase plan is retained as the broad work inventory, but the corrected authority rules, technology decision gate, selectable first-journey sequence, exact current-file map and stop-ship controls in this addendum are mandatory. The plan is ready for owner review; it is not itself authorization to process real data or deploy.
+
+
+## J. Phase 4 branch-specific work packets — no hidden clinical-first assumption
+
+The original detailed Phase 4 activities (clinical workflow state machine, patient registration, encounters, complaint intake, clinician formulation and sign-off) apply **only if ADR-001 selects the clinical journey**. They are not mandatory prerequisites for a different first journey.
+
+Before Phase 4 starts, Phase 0/1 must create exactly one approved packet selected from the following patterns:
+
+### J.1 If the owner selects the clinical journey
+
+Use original activities 4.1–4.9 and the existing clinical paths listed in Section D. In addition, confirm clinical lead, credentials, intended use, safety operations, consent, exact enabled instruments and clinician sign-off semantics. Keep all AI, assessment and safety functions disabled until their independent gates pass.
+
+### J.2 If the owner selects the free civilian Military Applicant Psychological Readiness Program
+
+Create a Phase 4 packet with these activities:
+
+| Activity | Files to use / create / modify | Role and acceptance evidence |
+|---|---|---|
+| 4A.1 Define eligibility, age range, service boundaries and no-affiliation wording | Document 13; documents 01/15; ADR-007/008; [NEW] 'docs/services/READINESS_SERVICE_OPERATING_MODEL.md' | Approved eligibility and age policy; explicit free/civilian/non-official scope; no admission prediction, pass/fail, fitness or deception coaching |
+| 4A.2 Define purpose-specific consent, minimal intake and separate participant identity/data | Documents 13/14; selected identity/data modules; [NEW] service consent/data-flow spec | Purpose, age/guardian safeguards and data separation tests; no national ID/audio by default |
+| 4A.3 Build psychoeducation and developmental support journey | Document 13; [NEW] readiness service UI/API/content modules | Reviewed content and exercises labeled educational/developmental, not standardized tests |
+| 4A.4 Add voluntary goals, follow-up and reassessment only where measures are approved | Documents 12/13/15; instrument registry from Phase 5 if required | No measure or cutoff without exact version/rights/population/purpose approval; progress feedback is not admission likelihood |
+| 4A.5 Define safety, referral and human service ownership | Documents 11/13/14; [NEW] referral/safety runbook and named coverage matrix | Verified human owner, coverage, referral pathway and failure fallback before public use |
+| 4A.6 Define service evaluation, complaints and free-service operations | Document 13; [NEW] evaluation and complaints specification | Funding/operator, service capacity, evaluation metrics and complaint owner approved |
+
+**Applicant-program stop condition:** Do not enable the journey for minors or any user age not explicitly approved. Do not use the embedded 'MIL-PREP' hybrid scale as an official, validated or admissions-related instrument. Disable it until an exact independent dossier is approved under document 12. Do not claim that the service improves admission outcomes.
+
+### J.3 If the owner selects another L1 journey
+
+Create a dedicated Phase 4 packet defining eligibility, purpose, user roles, consent, data partition, workflow, human ownership, referral/safety, evaluation, exact existing files, new paths, acceptance tests and rollback. No domain-specific clinical activity is inherited merely because it exists in the old Phase 4 table.
+
+### J.4 ADR-013 implementation-path restriction inside Phase 2
+
+The original Phase 2 Firestore activity is conditional:
+- Under **Path A (Firebase retained)**, repair and test 'firestore.rules', remove or archive 'DRAFT_firestore.rules' only through change control, and ensure tests load the exact authoritative rules.
+- Under **Path B (FastAPI/PostgreSQL migration)**, implement the approved backend authorization policy as the target authority. Firestore rules may be hardened only as a temporary transition control if Firebase remains reachable; do not build a second permanent authorization model.
+- Under **Path C (bounded hybrid)**, every data class/entity must have one named authoritative write owner and a contract test proving no split-brain writes.
+
+The chosen path must be visible in the Phase 2 packet and the Current→Target→Migration map before any security or persistence code is changed.
