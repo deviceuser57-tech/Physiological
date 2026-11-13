@@ -1,9 +1,11 @@
-# PsychoContext V8 — Documentation Baseline 2.2: Complete Merged Edition
+# PsychoContext V8 — Documentation Baseline 2.2.1: Corrective Working Revision
 
-**Merged at:** 2026-11-13 09:41:21 +02:00
-**Included sources:** 20 Markdown documents, numbered 00–19, merged in filename order.
-**Integrity note:** SHA-256 values below are calculated from the original raw file bytes before merging. Source files are not modified.
-**Content note:** Each source body is included in full; the metadata and boundary markers are added by this merge process.
+**Revision:** 2.2.1-proposed (corrective documentation revision; owner/specialist ratification required)
+**Base artifact:** Documentation Baseline 2.2, merged 2026-11-13 09:41:21 +02:00
+**Included documents:** 20 Markdown documents, numbered 00–19; document count and order are preserved.
+**Integrity note:** SHA-256 values embedded below identify the original raw source files as received before the 2.2 merge. They are provenance hashes, not hashes of the corrected embedded text in this maintained revision. Original 2.2 remains preserved on `main`.
+**Content note:** This is a maintained corrective copy of the 20-document merged artifact. Selected embedded sections are corrected for cross-document consistency; source filenames, source timestamps and original provenance hashes remain historical metadata.
+**Change control:** Corrections are limited to documentation consistency, canonical entity/API naming, decision status, and repository-baseline evidence. No application code, schema, dependency, deployment, clinical workflow or instrument approval is changed or authorized by this document.
 
 ## Contents
 
@@ -61,7 +63,7 @@
 
 # PsychoContext V8 — Documentation Master Index
 
-**Package status:** Documentation & Architecture Baseline 2.2 — proposed / owner and specialist review required; not implementation or clinical authorization | **Package revision:** 2.2-proposed | **Revision date:** 13 November 2026
+**Package status:** Documentation & Architecture Baseline 2.2.1 — corrective proposal / owner and specialist review required; not implementation or clinical authorization | **Package revision:** 2.2.1-proposed | **Base revision:** 2.2-proposed | **Revision date:** 13 November 2026
 **Version policy:** Package revision is independent of each document's own version; retain document-level versions, statuses and approval evidence in their respective files.
 
 ## Authority and source policy
@@ -77,7 +79,7 @@ This is a versioned 20-document package copied from the 12 November 2.1 proposal
 | 05 | [Enhancement Roadmap](05%20%E2%80%94%20Enhancement%20Roadmap.md) | Workstreams, progressive capability maturity, gates and acceptance outcomes | 06, 07, 18, 19 | Proposed; preserves full scope |
 | 06 | [Decision Register](06%20%E2%80%94%20Decision%20Register.md) | Eight owner decisions plus remaining genuinely open decisions | 07, 18, 19 | Eight classified as owner-approved per supplied prompt; others open/proposed |
 | 07 | [Requirement Traceability Matrix](07%20%E2%80%94%20Requirement%20Traceability%20Matrix.md) | Stable requirements linked to architecture, data, UI/API, test, ADR and status | All documents | Proposal; acceptance criteria require review |
-| 08 | [CBDNA Research & Technical Specification](08%20%E2%80%94%20CBDNA%20Research%20and%20Technical%20Specification.md) | Core engine purpose, candidate mathematical approaches, limits and validation | 11, 16, 07 | Research/design specification; not validated clinical model |
+| 08 | [CBDNA Research & Technical Specification](08%20%E2%80%94%20CBDNA%20Research%20and%20Technical%20Specification.md) | Core engine purpose, candidate mathematical approaches, limits and validation | 11, 16, 07 | Core-engine architecture owner-approved; models/features and clinical use remain unvalidated/gated |
 | 09 | [Knowledge Evolution & Learning Governance](09%20%E2%80%94%20Knowledge%20Evolution%20and%20Learning%20Governance.md) | Evidence authority, memory separation, research transformation, AI-assisted updates | 02, 12, 16, 17 | Proposed governance |
 | 10 | [Architecture Reconciliation Matrix](10%20%E2%80%94%20Architecture%20Reconciliation%20Matrix.md) | Contradictions, sources, decisions, resolutions, owners and tests | 04, 06, 07 | Reconciliation proposal |
 | 11 | [Clinical Governance & AI Authority Framework](11%20%E2%80%94%20Clinical%20Governance%20and%20AI%20Authority%20Framework.md) | Human clinical authority, safety, oversight, workflows and incident response | 03, 08, 13, 18 | For clinical/operational/legal review |
@@ -141,7 +143,11 @@ This revision corrects known misreferences: ADR-017 removed because it does not 
 | 18 | Reference | Source update map and preservation history |
 | 19 | Proposed | Documentation-to-repository baseline transition |
 
-No code changes, schema migrations, dependency installation or deployment are authorized here. Build/lint/tests were not run; implementation conformance remains unverified.
+### Corrective revision 2.2.1 change record
+
+This maintained copy resolves four confirmed documentation defects found during cross-document review: (1) canonical entity names/cardinalities are aligned between the technical blueprint, RTM and CBDNA data dictionary; (2) ADR-006 and ADR-012 status fields now reflect their superseding owner decisions OD-006 and OD-008 while preserving unresolved implementation work; (3) CBDNA is consistently described as an owner-approved core engine with model/feature/clinical-use maturity still gated; and (4) local-checkout evidence is explicitly separated from the current GitHub remote head. Original 2.2 remains unchanged on `main`; this branch is the proposed corrective copy. The source SHA-256 values remain provenance hashes of the original pre-merge files.
+
+No application code, database schema, migrations, dependencies or deployment are changed or authorized by this documentation correction. Build/lint/tests were not run; implementation conformance remains unverified.
 
 --- END FULL SOURCE CONTENT ---
 
@@ -318,7 +324,7 @@ An instrument’s presence in a registry is not approval for administration. Pro
 | Instrument version, rights and approval scope | Psychometric registry under 12 | `InstrumentVersion`, `ScopedApproval`, `RightsDossier` | Read-only references only; no copied approval state |
 | Responses and original score | Assessment/scoring service | `AssessmentAdministration`, `ResponseSet`, `ScoreResult` | CBDNA/formulation reference only; cannot rewrite |
 | Patient report / clinician-verified fact | Clinical record | `SourceRecord`, `VerifiedFact` | Pseudonymous reference in analytics only if authorized |
-| CBDNA definition, candidate relation, derivation | CBDNA engine | `FeatureDefinitionVersion`, `FeatureObservation`, `DerivationLineage` | Candidate reference and review state |
+| CBDNA definition, candidate relation, derivation | CBDNA engine | `FeatureDefinition`, `FeatureVersion`, `FeatureObservation`, `DerivationLineage` | Candidate reference and review state |
 | Diagnosis/formulation/treatment decision | Qualified clinician workflow | `ClinicianDecision`, `Formulation`, `TreatmentPlan` | Scoped read-only references |
 | Safety disposition/action | Human-owned safety workflow | `HumanSafetyAssessment`, `SafetyAction` | Indicator references; no autonomous write authority |
 | Approved research finding | Protocol-governed research store | `ApprovedFinding` with protocol/review/version | No raw patient memory or general researcher case retrieval |
@@ -356,9 +362,19 @@ Python owns domain rules, deterministic psychometric scoring, validation, AI orc
 
 Identity/access; organizations/tenancy; consent; clinical patients/encounters; applicant/program participants; assessment and instrument registry; formulation/diagnosis; treatment; safety; CBDNA engine; knowledge/evidence; advanced adaptive RAG; research governance; programs; audit/operations. Modules share platform services but enforce purpose boundaries. Clinical and applicant records are separately identified and authorized.
 
-## 3. Core data entities
+## 3. Core data entities and naming authority
 
-User, Organization, Membership, RoleGrant, Credential, Consent, Patient, ProgramParticipant, Encounter, IntakeArtifact, ExtractedFact, Instrument, InstrumentVersion, LicenseApproval, AssessmentOrder, Session, Response, Score, Interpretation, Formulation, ClinicianDecision, TreatmentPlan, SafetyEvent, CBDNAFeatureDefinition, CBDNAFeatureVersion, FeatureObservation, ContextRecord, TemporalWindow, ContradictoryObservation, DerivationLineage, ClinicalEvidence, KnowledgeDocument, ResearchProtocol, ResearchCandidate, ApprovedFinding, RAGIndexVersion, RetrievalTrace, Program, Enrollment, AuditEvent, ProviderCall, Incident. Detailed CBDNA fields in 16; source authority and knowledge lifecycle in 09.
+Use the canonical entity names below across the domain model, OpenAPI schemas, persistence mappings, RTM rows and tests. Documents 02/12 own knowledge and instrument semantics; 16 owns CBDNA entity semantics; 03 owns the cross-domain API and implementation contract. A name used only as a UI label or API projection must not silently become a second persisted source of truth.
+
+- **Identity and access:** `User`, `Organization`, `Membership`, `RoleGrant`, `Credential`, `Consent`.
+- **Clinical source and formulation:** `Patient`, `Encounter`, `SourceRecord`, `ExtractedFact` (unverified candidate), `VerifiedFact` (human-verified fact linked to its source), `ContextRecord`, `Formulation`, `ClinicianDecision`, `TreatmentPlan`.
+- **Psychometrics:** `Instrument`, `InstrumentVersion`, `ScopedApproval`, `AssessmentOrder`, `AssessmentAdministration`, `ResponseSet`, `ScoreResult`, `Interpretation`. One administration binds to exactly one immutable instrument version; one response set and each score result retain that version and scoring-spec lineage.
+- **CBDNA:** `FeatureDefinition`, `FeatureVersion`, `FeatureObservation`, `FeatureValue`, `SourceAttribution`, `ContextRecord`, `TemporalWindow`, `UncertaintyRecord`, `ContradictoryObservation`, `DerivationMethod`, `DerivationLineage`, `ReviewEvent`, `Relation`. The authoritative definitions and cardinalities are in 16.
+- **Safety:** `SafetyIndicator`, `HumanSafetyAssessment`, `SafetyAction`, `CoverageConfig`; a `SafetyEvent` may be an aggregate/workflow container only and is not a substitute for these three independently attributable records.
+- **Knowledge and research:** `SourceDocument`, `SourceVersion`, `KnowledgeCandidate`, `ResearchProtocol`, `ProtocolApproval`, `ExportApproval`, `ResearchCandidate`, `ApprovedFinding`, `AuditEvent`, `ProviderCall`, `Incident`.
+- **Retrieval:** `RAGIndexVersion`, `RetrievalTrace`, `CitationSpan`; index records retain source-version and deletion lineage.
+
+**Canonical-name corrections:** `FeatureDefinitionVersion` is not a separate entity; use `FeatureDefinition` + `FeatureVersion`. `CBDNAFeatureDefinition`/`CBDNAFeatureVersion` are deprecated aliases; use the same canonical pair. `Session`/`Response`/`Score` in the earlier illustrative inventory mean `AssessmentAdministration`/`ResponseSet`/`ScoreResult` only when they refer to psychometric administration data. `AssessmentResult` is not a separate authoritative entity; use `ScoreResult`. `ClinicalReview` is a view/aggregate over append-only `ReviewEvent` records, not a competing write model. `EvidenceLink` is an API projection of a typed `Relation`, not a second source of truth. Do not use `FeatureDefinitionVersion`, `AssessmentResult`, or generic `Score` in new schema/API work.
 
 ## 4. API principles and examples
 
@@ -401,7 +417,7 @@ All writes require an authenticated principal, tenant/service scope, purpose, sc
 | Identity/consent | `GET /v1/me`; `POST /v1/consents`; `POST /v1/role-grants` | User, Membership, RoleGrant, Credential, Consent | Role grant by authorized admin/verifier; no self-elevation |
 | Clinical | `POST /v1/encounters`; `POST /v1/source-records`; `POST /v1/formulations/drafts`; `POST /v1/clinician-decisions` | Encounter, SourceRecord, VerifiedFact, Formulation, ClinicianDecision | Only credentialed clinician finalizes decisions |
 | Psychometrics | `GET /v1/instruments`; `POST /v1/assessment-orders`; `POST /v1/assessment-administrations`; `POST /v1/score-runs` | InstrumentVersion, ScopedApproval, Administration, ResponseSet, ScoreResult | Exact scope checked server-side; deterministic scorer writes result |
-| CBDNA | `POST /v1/cbdna/observations`; `GET /v1/cbdna/subjects/{id}/timeline`; `POST /v1/cbdna/reviews` | FeatureDefinitionVersion, Observation, Context, DerivationLineage, ReviewEvent | Candidate state explicit; no safety/diagnosis write |
+| CBDNA | `POST /v1/cbdna/observations`; `GET /v1/cbdna/subjects/{id}/timeline`; `POST /v1/cbdna/reviews` | FeatureDefinition, FeatureVersion, FeatureObservation, ContextRecord, DerivationLineage, ReviewEvent | Candidate state explicit; no safety/diagnosis write |
 | Safety | `POST /v1/safety/indicators`; `POST /v1/safety/assessments`; `POST /v1/safety/actions` | SafetyIndicator, HumanSafetyAssessment, SafetyAction, CoverageConfig | Assessment/action require authorized human |
 | Knowledge/research | `POST /v1/knowledge/candidates`; `POST /v1/knowledge/reviews`; `POST /v1/research/exports` | SourceVersion, Candidate, Review, Protocol, ExportApproval, Finding | Export fails closed until required approvals |
 | RAG | `POST /v1/knowledge/search`; `GET /v1/retrieval-traces/{id}` | RetrievalTrace, SourceVersion, CitationSpan | Permission filtering before retrieval and response |
@@ -514,6 +530,8 @@ The supplied `pasted_content_5.txt` is explicitly a **proposed enhancement pendi
 **Observed:** branch `main` tracks `origin/main`; last observed commit `3404a0f` dated 8 November 2026 (`feat(db): enable offline persistence and add military prep scale`). Declared dependencies include React 19, TypeScript 7, Vite 8, Express/tsx, Firebase 13 and Google GenAI; scripts include `build`, `lint` (`tsc --noEmit`) and `dev/start`. `server.ts` defines a Gemini scale-recommendation endpoint whose prompt includes complaint/demographic content and requests tone/speech-rate estimates based on text. `clinicalDatabase.ts` writes patient/visit records using Firestore and includes a fallback returning a patient ID after a write error. `psychometrics.ts` contains scoring and severity labels. `firestore.rules` grants read/write to users satisfying a broad `doctor` role. The single rules test is labelled conceptual/mock, reads `DRAFT_firestore.rules`, and has an incomplete ownership test. These are code observations only; each behavior requires dedicated tests/review before defect classification.
 
 **Worktree preservation:** Git reported two tracked Arabic Markdown files deleted and multiple untracked materials (`.manus/`, `.work/`, `Existing_Documents/`, proposal folders, `Source_Conversation/`, `outputs/`, and a proposal ZIP). Preserve these; do not reset, delete, stage or overwrite them. Recheck exact worktree state before any code change.
+
+**Remote/local commit reconciliation (verified during corrective revision 2.2.1):** GitHub `main` currently points to full commit `754a3b82b6abff80506835a76b0f5bb4364308b0` (parent `3e0a6519b80bbdea8b8ea8e93d20b7d75f57e815`, commit message `Add files via upload`, 13 November 2026 08:13:14Z). This is not the same identifier as the local checkout's last-observed short commit `3404a0f` (8 November 2026). The local observation may describe a different/stale checkout; its ancestry and file-tree equivalence to remote `main` have not been established. Therefore the source inventory above must not be represented as a verified inspection of remote commit `754a3b82...`. Before implementation mapping, inspect the exact remote tree/commit and rerun the repository inventory against that SHA.
 
 **Not established:** runtime behavior, deployed build, actual role assignments, production rules, database contents, provider retention configuration, instrument rights/validity, safety operation, or pass/fail status. `npm run lint` did not complete because the terminal session became unavailable; build/tests were not run. No implementation, security, legal, scientific or clinical readiness is certified.
 
@@ -666,13 +684,13 @@ The base ADR-001–ADR-016 register below records the status of those individual
 | ADR-003 | How should environmental and socioeconomic context affect interpretation? | Capture context for formulation; do not mathematically alter validated scores until instrument-specific validation supports it | Proposed | Psychometrician; clinical lead; owner | Earlier 25% context adjustment is a reported proposal without established validation | 01, 02, 04; RTM-05 |
 | ADR-004 | Is speech/audio intake included, and what is retained? | Optional, separate consent; clinician verifies extracted facts; default audio deletion after transcription unless a reviewed purpose requires retention | Open | Product owner; privacy/security; clinical lead; legal | Provider terms, data-flow map, age/minor policy | 01, 03, 05; RTM-06 |
 | ADR-005 | What AI providers may process clinical information, under what terms and region? | No clinical data transmission until provider, retention, training-use, location and incident terms are reviewed | Open / Blocked | Security/privacy; legal; clinical owner | Provider contracts/settings and data residency | 01, 03, 05; RTM-07 |
-| ADR-006 | What is meant by “RAG 5”? | Treat phrase as undefined; adopt no technical meaning until the owner defines it and architecture review records it | Open | Product owner; AI/knowledge architect | Historical phrase only; no established project definition found | 02, 03, 04; RTM-08 |
+| ADR-006 | What is meant by “RAG 5”? | Treat phrase as undefined; adopt no technical meaning until the owner defines it and architecture review records it | **Superseded by OD-006** for terminology; methods, providers, thresholds and deployment remain Open | Product owner; AI/knowledge architect | Owner clarification OD-006; method selection and operational choices remain unresolved | 02, 03, 04; RTM-08, RTM-31, RTM-33 |
 | ADR-007 | How are minors handled? | Defer access until age thresholds, consent/assent, safeguarding and escalation are reviewed for applicable jurisdiction | Open / Blocked | Legal; child/adolescent clinical lead; privacy owner | Local law and operational safeguarding plan | 01, 03, 05; RTM-09 |
 | ADR-008 | What safety/emergency response is operationally available? | No public safety workflow without named human responder, verified local resources, escalation ownership and tested coverage | Open / Blocked | Clinical safety lead; operations; legal | Service hours, geography, referral contacts and tabletop exercise | 01, 03, 05; RTM-10 |
 | ADR-009 | How are roles, clinician credentials and tenant boundaries established? | Server/data-layer enforcement; independently verified professional access; least privilege; audited delegation | Proposed | Security owner; clinical governance; operations | Identity provider and organizational credentialing process | 01, 03, 05; RTM-11 |
 | ADR-010 | What data retention, deletion, correction and consent-withdrawal rules apply? | Define per data class and purpose before production; preserve lawful audit history while honoring applicable rights | Open / Blocked | Privacy/legal; data controller; clinical lead | Jurisdictional review, data inventory, backup policy | 01, 03, 05; RTM-12 |
 | ADR-011 | How should AI/clinician disagreement be used? | Store separate hypotheses and clinician decisions; do not treat disagreement as error labels or automatic model training | Proposed | Clinical lead; AI governance; research lead | Approved protocol, data governance and validity plan before research | 01, 02, 03, 05; RTM-13 |
-| ADR-012 | What is the status and scope of the readiness/MIL-PREP concept? | Civilian developmental education only; no admission, fitness, pass/fail or official-affiliation claims; separate consent/data | Proposed | Owner; legal; psychometrician; clinical lead | Exact construct, population, rights and validation evidence | 01, 02, 04, 05; RTM-14 |
+| ADR-012 | What is the status and scope of the readiness/MIL-PREP concept? | Civilian developmental education only; no admission, fitness, pass/fail or official-affiliation claims; separate consent/data | **Service definition superseded by OD-008**; operations, measures, age/consent and evaluation remain Open/Proposed | Owner; legal; psychometrician; clinical lead | OD-008 fixes the service boundary; operational, scientific and legal evidence remains required | 01, 02, 04, 05; RTM-14, RTM-35 |
 | ADR-013 | What is the initial technology and hosting architecture? | Evaluate Python/FastAPI + TypeScript/React + PostgreSQL modular monolith; approve only after deployment, residency and operational assessment | Proposed | Engineering owner; security; product owner | Hosting region, identity, support and migration constraints | 03, 05; RTM-15 |
 | ADR-014 | What constitutes a legally adequate clinician sign-off? | Use authenticated, attributable decision event; obtain jurisdiction-specific legal review before claiming electronic signature status | Open | Legal; clinical governance; engineering | Applicable signature and recordkeeping requirements | 01, 03, 05; RTM-16 |
 | ADR-015 | Is the future Fitrah model part of initial scientific architecture? | Keep separate as future research; Islamic psychology may be one independently governed perspective where measures are appropriate | Proposed | Owner; relevant scholars/researchers; psychometrician; clinical lead | Construct definition, governance and evidence plan | 01, 02, 04; RTM-17 |
@@ -833,7 +851,7 @@ These requirements operationalize the compatibility gaps identified between **08
 
 ### Implementation gate for these rows
 
-RTM-23 and RTM-28 are **stop-ship controls** for any release that includes clinical risk/safety workflows. RTM-24 and RTM-25 are prerequisites for any clinician-facing CBDNA view. RTM-26 and RTM-27 are required before longitudinal aggregation or research reuse. The fact that CBDNA is currently research/design-only (08 §10) means these requirements must be tested before changing that status, not assumed satisfied by the specification itself.
+RTM-23 and RTM-28 are **stop-ship controls** for any release that includes clinical risk/safety workflows. RTM-24 and RTM-25 are prerequisites for any clinician-facing CBDNA view. RTM-26 and RTM-27 are required before longitudinal aggregation or research reuse. CBDNA is an owner-approved independent core engine; its L1 implementation is limited to provenance/source-separated observations until built and verified, while higher-maturity models/features and clinical uses remain evidence-gated. The specification does not prove implementation or validation.
 
 ## Addendum — Requirements from owner-approved clarifications (new IDs only)
 
@@ -894,7 +912,7 @@ These rows supplement RTM-29–38; they do not alter stable identifiers. Accepta
 
 | ID | Independent requirement | Component / API / data mapping | Verification and acceptance | Status |
 | --- | --- | --- | --- | --- |
-| RTM-53 | Contextual synthesis may relate separate evidence only while preserving each source/result and marking association versus clinician interpretation. | Clinical Formulation Engine; `POST /v1/formulations/drafts`; `InstrumentVersion`, `AssessmentAdministration`, `AssessmentResult`, `ContextRecord`, `EvidenceLink` | Synthetic report displays each result separately with version/date/language/population/timeframe/source/limits; context does not rewrite raw score; reviewer can distinguish association from clinician-authored interpretation. | Proposed |
+| RTM-53 | Contextual synthesis may relate separate evidence only while preserving each source/result and marking association versus clinician interpretation. | Clinical Formulation Engine; `POST /v1/formulations/drafts`; `InstrumentVersion`, `AssessmentAdministration`, `ScoreResult`, `ContextRecord`, `Relation` | Synthetic report displays each result separately with version/date/language/population/timeframe/source/limits; context does not rewrite raw score; reviewer can distinguish association from clinician-authored interpretation. | Proposed |
 | RTM-54 | Cross-instrument composite scores are prohibited unless a named, purpose-specific composite has independent validation, rights and approval; registry presence alone is insufficient. | Psychometric Engine; `POST /v1/composite-definitions` (governance-only, disabled by default); `CompositeDefinition`, `ValidationDossier`, `ScopedApproval` | Negative tests reject arbitrary averaging, incompatible scales and unapproved composites; any enabled composite requires exact model/version/population/use dossier and approval, and preserves component scores. | Proposed |
 | RTM-55 | No causal inference may be produced from correlation, co-occurrence or temporal association alone. | CBDNA relationship layer and Formulation Engine; `POST /v1/evidence-links`; typed `associated_with` relation distinct from any separately validated causal claim | Tests ensure correlation/co-occurrence labels remain non-causal; causal relation requires an independently reviewed method/evidence record and explicit limits; AI cannot promote association to cause. | Proposed |
 
@@ -1907,9 +1925,13 @@ These are two distinct baselines. Documentation Baseline 2.2 is the proposed, ve
 
 ### Read-only repository evidence captured for this review (13 November 2026)
 
-The confirmed path `D:\Physo\Physiological` contains a Git repository on branch `main` tracking `origin/main`, last observed commit `3404a0f` (2026-11-08; `feat(db): enable offline persistence and add military prep scale`). The root includes `package.json`, `server.ts`, `src/`, `public/`, Firebase configuration/rules, and one Firestore rules test file. The package declares React 19/TypeScript/Vite 8, Express/tsx, Firebase 13, and Google GenAI; scripts include `build` (Vite), `lint` (tsc --noEmit), `dev/start` (tsx server.ts). The inspected source shows a client-side Firebase database service and a server endpoint that sends complaint and demographic fields to Gemini for scale recommendation; the psychometrics utility contains inline scoring and threshold logic. Firestore rules authorize a broad `doctor` role and the test file is marked conceptual/mock and reads `DRAFT_firestore.rules`. These are source-inspection findings only, not runtime results or a full security review.
+The confirmed path `D:\Physo\Physiological` contains a Git repository on branch `main` tracking `origin/main`, last observed **local-checkout** commit `3404a0f` (short SHA; 2026-11-08; `feat(db): enable offline persistence and add military prep scale`). This local identifier is not the currently observed remote GitHub `main` head; see the identity gate below. The root includes `package.json`, `server.ts`, `src/`, `public/`, Firebase configuration/rules, and one Firestore rules test file. The package declares React 19/TypeScript/Vite 8, Express/tsx, Firebase 13, and Google GenAI; scripts include `build` (Vite), `lint` (tsc --noEmit), `dev/start` (tsx server.ts). The inspected source shows a client-side Firebase database service and a server endpoint that sends complaint and demographic fields to Gemini for scale recommendation; the psychometrics utility contains inline scoring and threshold logic. Firestore rules authorize a broad `doctor` role and the test file is marked conceptual/mock and reads `DRAFT_firestore.rules`. These are source-inspection findings only, not runtime results or a full security review.
 
 Git reported two tracked Arabic Markdown files deleted in the worktree and multiple untracked task/document folders (`.manus`, `.work`, `Existing_Documents`, both proposal folders, `Source_Conversation`, `outputs`, and the proposal ZIP). These pre-existing changes must be preserved; no reset, checkout, clean, install, migration, build, or source-code edit was performed as part of this read-only pass. The reported `npm run lint` invocation could not be completed because the terminal session became unavailable; build/test status is therefore **not run / unverified**.
+
+### Remote/local repository identity gate — mandatory before implementation
+
+The local checkout inventory in this document reports short commit `3404a0f` from 8 November 2026. The GitHub remote `main` head was separately verified during revision 2.2.1 as `754a3b82b6abff80506835a76b0f5bb4364308b0` (parent `3e0a6519b80bbdea8b8ea8e93d20b7d75f57e815`). These references are not interchangeable, and no tree equivalence is established. The implementation baseline must be regenerated against the exact remote commit intended for development; record its full SHA, tree SHA, branch, worktree state and inspected paths. Until then, all code observations in the earlier local inventory are historical/local evidence only, not proof of the current GitHub `main` contents.
 
 ### Gate R0 — Repository Implementation Baseline evidence required before code changes
 
