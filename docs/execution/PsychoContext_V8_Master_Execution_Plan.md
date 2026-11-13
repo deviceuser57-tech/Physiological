@@ -3,7 +3,7 @@
 **Version:** 1.1-reconciled-draft  
 **Status:** Repository-reconciled corrective draft — requires owner approval before Phase 0/1 implementation  
 **Repository:** `deviceuser57-tech/Physiological`  
-**Planning branch:** `planning/master-execution-plan-v1`  
+**Planning branch:** `planning/master-execution-plan-v1.1`  
 **Baseline:** Documentation Baseline 2.2.1-proposed and the current repository source snapshot inspected during the November 2026 audit  
 **Purpose:** One controlled, traceable plan for modifying the existing repository and completing the PsychoContext application through sequential, formally accepted phases.
 
@@ -717,7 +717,7 @@ Before Phase 2 begins, update the decision and requirement records as follows:
 - **ADR-014:** distinguish attributable clinical sign-off from any legally binding electronic signature claim.
 - **ADR-016:** preserve exact commit, source hashes, command logs and reviewer evidence.
 - **RTM:** add or map independently testable requirements for active rules, ownership/tenant boundaries, localStorage sensitive-data removal, failed persistence, appointment/settings access, AI route authorization, modality correctness, instrument activation, migration reconciliation and CI/test coverage. Preserve existing IDs; use new IDs only through the documented crosswalk.
-- **Docs 00–19:** update only the authoritative 2.2.1 source and synchronized canonical copies after approval. Keep OD-001–OD-008 statuses unchanged. Do not promote proposed psychometric recommendations or open ADRs by implementation convenience.
+- **Docs 00–19:** update only the authoritative 2.2.2 source and synchronized canonical copies after approval. Keep OD-001–OD-008 statuses unchanged. Do not promote proposed psychometric recommendations or open ADRs by implementation convenience.
 
 ## H. Revised first implementation instruction
 
